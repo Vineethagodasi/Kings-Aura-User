@@ -11,9 +11,18 @@ import accountIcon from "../assets/menuicons/account.png";
 import wishlistIcon from "../assets/menuicons/wishlist.png";
 import exploreImg from "../assets/images/exploreBtn.png";
 import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser, clearUser } from "../redux/user/userSlice";
+import { logoutUser } from "../constants/auth";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { showSuccess } from "../utils/toast";
 
 
 function Sidebar({ open, setOpen }) {
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuItems = [
             { name: "HOME", icon: homeIcon },
@@ -22,6 +31,49 @@ function Sidebar({ open, setOpen }) {
             { name: "ABOUT", icon: aboutIcon },
             { name: "CONTACT", icon: contactIcon },
           ];
+
+          const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+          const dispatch = useDispatch();
+          const navigate = useNavigate();
+
+          const confirmLogout = async () => {
+            try {
+              // Step 1: Call logout API
+              await logoutUser();
+              showSuccess("Logged out successfully");
+
+              // Step 2: Clear token from localStorage
+              localStorage.removeItem("token");
+
+              // Step 3: Clear user from Redux
+              dispatch(clearUser());
+
+              // Step 4: Close modal
+              setShowLogoutModal(false);
+
+              // Step 5: Close sidebar
+              setOpen(false);
+
+              // Step 6: Navigate to home
+              navigate("/");
+            } catch (err) {
+              console.log("Logout error:", err);
+              // Even if API fails, still clear local state
+              localStorage.removeItem("token");
+              dispatch(clearUser());
+              setShowLogoutModal(false);
+              navigate("/");
+            }
+          };
+
+          const handleLogoutClick = () => {
+            setShowLogoutModal(true);
+          };
+
+          useEffect(() => {
+            setOpen(false); // Close sidebar on route change
+          }, [location.pathname]);
         
 
   return (
@@ -84,10 +136,12 @@ function Sidebar({ open, setOpen }) {
               <p>Track Order</p>
             </div>
 
-            <div className="flex items-center gap-3">
+          <Link to="/profile">
+            <div className="flex items-center gap-3 mt-4">
               <img src={accountIcon} className="w-5 h-5 opacity-80" />
               <p>My Account</p>
             </div>
+          </Link>
 
             <div className="flex items-center gap-3">
               <img src={wishlistIcon} className="w-5 h-5 opacity-80" />
@@ -113,13 +167,85 @@ function Sidebar({ open, setOpen }) {
             </div>
 
           {/* Button */}
-          <button className="my-8 bg-primary text-black px-6 py-3 rounded-xl w-full flex items-center justify-center gap-3 font-medium">
-            <img src={exploreImg} className="w-5 h-5" />
-            Explore Collection
-          </button>
+
+
+          { isLoggedIn ? (
+            <button onClick={handleLogoutClick} className="my-8 bg-primary text-black px-6 py-3 font-semibold rounded-xl w-full flex items-center justify-center gap-3 font-medium">
+              {/* <img src={exploreImg} className="w-5 h-5" /> */}
+              Logout
+            </button>
+          ) : (
+            <Link to="/login">
+            <button className="my-8 bg-primary text-black px-6 py-3 font-semibold rounded-xl w-full flex items-center justify-center gap-3 font-medium">
+              {/* <img src={exploreImg} className="w-5 h-5" /> */}
+              Sign-In
+            </button>
+          </Link>
+          )}
         </div>
       </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <AnimatePresence>
+        {showLogoutModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            easing="easeInOut"
+            className="fixed inset-0 bg-black/20 z-[999] flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.7, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="w-full max-w-md"
+            >
+              <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 md:p-8 shadow-2xl">
+                {/* Decorative Line */}
+                <div className="flex items-center gap-4 mb-6 justify-center">
+                  <div className="h-[2px] w-12 bg-white/60"></div>
+                  <span className="text-white/70 text-xs tracking-[0.3em]">⚠</span>
+                  <div className="h-[2px] w-12 bg-white/60"></div>
+                </div>
+
+                {/* Heading */}
+                <h2 className="text-center font-cinzel text-2xl md:text-3xl text-white mb-2">
+                  CONFIRM LOGOUT
+                </h2>
+
+                {/* Message */}
+                <p className="text-center text-white/70 text-sm md:text-base mb-8">
+                  Are you sure you want to logout? You'll need to sign in again to access your account.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowLogoutModal(false)}
+                    className="flex-1 bg-white/10 border border-white/30 text-white py-3 rounded-xl hover:bg-white/20 transition font-medium"
+                  >
+                    Cancel
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={confirmLogout}
+                    className="flex-1 bg-primary text-black py-3 rounded-xl hover:opacity-90 transition font-semibold"
+                  >
+                    Logout
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

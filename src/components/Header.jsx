@@ -30,9 +30,10 @@ function Header() {
     // ✅ Pages where header should ALWAYS be white
   const whiteHeaderRoutes = [
     "/product-details",
+    "/profile"
   ];
 
-  const isWhitePage = whiteHeaderRoutes.includes(location.pathname);
+  const isWhitePage = whiteHeaderRoutes.includes(location.pathname) || location.pathname.startsWith("/profile");
 
 
   return (

@@ -11,63 +11,39 @@ import arrow from "../assets/images/collection/arrow.png";
 import Hero from "../components/Hero";
 import productBg from "../assets/images/collection/productBg.png";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function CollectionDetails() {
+
+    const [activeImages, setActiveImages] = useState({});
+  
   const products = [
     {
       title: "The Sovereign Linen",
       desc: "Premium linen crafted for royal comfort",
       price: "₹4,999",
-      image: img1,
-      tag: "LIMITED EDITION",
-    },
-    {
-      title: "The Sovereign Linen",
-      desc: "Premium linen crafted for royal comfort",
-      price: "₹4,999",
-      image: img1,
-      tag: "LIMITED EDITION",
-    },
-    {
-      title: "The Sovereign Linen",
-      desc: "Premium linen crafted for royal comfort",
-      price: "₹4,999",
-      image: img1,
-      tag: "LIMITED EDITION",
-    },
-    {
-      title: "The Sovereign Linen",
-      desc: "Premium linen crafted for royal comfort",
-      price: "₹4,999",
-      image: img1,
-      tag: "LIMITED EDITION",
-    },
-    {
-      title: "The Sovereign Linen",
-      desc: "Premium linen crafted for royal comfort",
-      price: "₹4,999",
-      image: img1,
+      images: [img1, cart, img3, img4], // 👈 array
       tag: "LIMITED EDITION",
     },
     {
       title: "The Regal Silk Shirt",
       desc: "Elegance woven in every thread",
       price: "₹6,499",
-      image: img2,
+      images: [img1, img2, img3, img4], // 👈 array
       tag: "New Arrival",
     },
     {
       title: "The Monarch Classic Fit",
       desc: "Designed for presence and power",
       price: "₹5,299",
-      image: img3,
+      images: [img1, img2, img3, img4], // 👈 array
       tag: "LIMITED EDITION",
     },
     {
       title: "The Imperial Evening Wear",
       desc: "For nights that demand attention",
       price: "₹7,999",
-      image: img4,
+      images: [img1, img2, img3, img4], // 👈 array
       tag: "LIMITED EDITION",
     },
   ];
@@ -154,18 +130,36 @@ function CollectionDetails() {
                   <img src={crown} className="w-6 h-6" />
                 </div>
 
-                {/* Image */}
-                <div className="overflow-hidden">
-                 <Link to={`/product-details`}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full object-contain 
-                             transition-transform duration-500 
-                             group-hover:scale-105"
-                  />
-                 </Link>
+                  {/* Image */}
+              <div className="overflow-hidden">
+                <img
+                 key={activeImages[index] || 0}
+                  src={item.images[activeImages[index] || 0]}
+                  alt={item.title}
+                  className="w-full h-[180px] object-contain transition-transform duration-500 group-hover:scale-105"
+                />
+
+                <div className="flex justify-center mt-3 gap-2">
+                  {item.images.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() =>
+                        setActiveImages((prev) => ({
+                          ...prev,
+                          [index]: i,
+                        }))
+                      }
+                      className={`h-2.5 rounded-full transition-all duration-300
+        ${
+          (activeImages[index] || 0) === i
+            ? "bg-primary w-4"
+            : "bg-gray-300 w-2.5"
+        }
+      `}
+                    />
+                  ))}
                 </div>
+              </div>
 
                 {/* Content */}
                 <div className="mt-4 text-center">

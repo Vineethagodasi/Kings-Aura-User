@@ -15,9 +15,10 @@ function Footer() {
 
   const noSpace = [
     "/cart",
+    "/profile",
   ];
 
-    const isNoSpace = noSpace.includes(location.pathname);
+    const isNoSpace = noSpace.includes(location.pathname) || noSpace.some(path => location.pathname.startsWith(path));
 
 
   return (
