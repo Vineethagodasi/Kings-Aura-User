@@ -17,9 +17,10 @@ import ResetPassword from "../pages/auth/ResetPassword";
 import Sidebar from "../components/profileSidebar/Sidebar";
 import Dashboard from "../pages/profile/Dashboard";
 import Orders from "../pages/profile/Orders";
-import Address from "../pages/profile/Address";
+import Address from "../pages/profile/address/Address";
 import Payment from "../pages/profile/Payment";
 import Settings from "../pages/profile/Settings";
+import Security from "../pages/profile/Security";
 
 function AppRoutes() {
   return (
@@ -49,7 +50,7 @@ function AppRoutes() {
               <Route path="address" element={<Address />} />
               <Route path="payment" element={<Payment />} />
               <Route path="settings" element={<Settings />} />
-         
+              <Route path="security" element={<Security />} />
             </Route>
           </Route>
         </Route>

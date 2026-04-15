@@ -6,6 +6,7 @@ import {
   MapPin,
   Wallet,
   Settings,
+  Shield,
   LogOut,
   Menu,
   X,
@@ -14,6 +15,7 @@ import closeIcon from "../../assets/images/close.png";
 import { useSelector, useDispatch } from "react-redux";
 import { profilePictureUpload, getMe } from "../../constants/auth";
 import { setUser } from "../../redux/user/userSlice";
+import { showSuccess } from "../../utils/toast";
 
 export default function Sidebar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -26,6 +28,7 @@ export default function Sidebar() {
     { name: "Addresses", path: "/profile/address", icon: MapPin },
     { name: "Payment Methods", path: "/profile/payment", icon: Wallet },
     { name: "Settings", path: "/profile/settings", icon: Settings },
+    { name: "Security", path: "/profile/security", icon: Shield },
   ];
 
   const { user, isLoggedIn } = useSelector((state) => state.user);
@@ -56,6 +59,7 @@ export default function Sidebar() {
       const res = await profilePictureUpload(formData);
 
       // Upload successful, now fetch updated user data
+      showSuccess(res.data.message || "Profile picture updated");
       if (res?.data?.success) {
         const userRes = await getMe();
         
@@ -98,7 +102,7 @@ export default function Sidebar() {
 
           {/* Sidebar Panel */}
           <div
-            className={`fixed lg:static left-0 top-0 h-screen lg:h-auto w-72 lg:w-full z-40 bg-white rounded-r-3xl pt-24 lg:rounded-3xl p-4 md:p-6 shadow-2xl md:pt-32 lg:pt-0 transition-transform duration-300 lg:sticky lg:top-40 lg:translate-x-0 ${
+            className={`fixed lg:static left-0 top-0 h-screen lg:h-auto w-72 lg:w-full z-40 bg-white rounded-r-3xl pt-24 lg:rounded-3xl p-4 md:p-6 shadow-2xl md:pt-32 lg:pt-0 transition-transform duration-300 lg:sticky lg:top-36 lg:translate-x-0 ${
               mobileMenuOpen
                 ? "translate-x-0"
                 : "-translate-x-full lg:translate-x-0"
@@ -149,7 +153,7 @@ export default function Sidebar() {
             </div>
 
             {/* Menu */}
-            <div className="space-y-2 md:space-y-3">
+            <div className="space-y-2">
               {menu.map((item, i) => {
                 const Icon = item.icon;
                 return (
