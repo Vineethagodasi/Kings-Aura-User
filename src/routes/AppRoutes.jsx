@@ -5,9 +5,9 @@ import Home from "../pages/Home";
 import Layout from "../components/Layout";
 import Cart from "../pages/Cart";
 import ScrollToTop from "../components/ScrollToTop";
-import Collection from "../pages/Collection";
-import CollectionDetails from "../pages/CollectionDetails";
-import ProductDetails from "../pages/ProductDetails";
+import Collection from "../pages/collection/Collection";
+import CollectionDetails from "../pages/collection/CollectionDetails";
+import ProductDetails from "../pages/product/ProductDetails";
 import Checkout from "../pages/Checkout";
 import Signup from "../pages/auth/Signup";
 import Login from "../pages/auth/Login";
@@ -21,6 +21,8 @@ import Address from "../pages/profile/address/Address";
 import Payment from "../pages/profile/Payment";
 import Settings from "../pages/profile/Settings";
 import Security from "../pages/profile/Security";
+import Wishlist from "../pages/Wishlist";
+import Product from "../pages/product/Product";
 
 function AppRoutes() {
   return (
@@ -37,9 +39,11 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/collection" element={<Collection />} /> 
-          <Route path="/collection-details" element={<CollectionDetails />} />
-          <Route path="/product-details" element={<ProductDetails />} />
+          <Route path="/collection/:name" element={<CollectionDetails />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/product-details/:id" element={<ProductDetails />} />
           {/* <Route path="/product/:id" element={<ProductDetails />} /> */}
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           

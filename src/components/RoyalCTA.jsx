@@ -3,6 +3,7 @@
 import bgImg from "../assets/images/royalBg.png"; // your background image
 import exploreIcon from "../assets/images/exploreBtn.png";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function RoyalCTA() {
   return (
@@ -46,6 +47,7 @@ function RoyalCTA() {
         </motion.p>
 
         {/* Button */}
+       <Link to="/collection">
         <motion.button
           className="mt-8 bg-primary text-black px-8 py-3 rounded-xl flex items-center gap-2 font-medium hover:opacity-90 transition"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -56,6 +58,7 @@ function RoyalCTA() {
           <img src={exploreIcon} className="w-5 h-5" />
           Explore Collection
         </motion.button>
+       </Link>
       </div>
     </section>
   );

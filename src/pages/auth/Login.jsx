@@ -102,6 +102,12 @@ function Login() {
                 <img src={logo} className="w-[123px]" alt="logo" />
               </div>
 
+              <div className="text-center">
+                <h4 className="text-white">for login use this email and password</h4>
+              <p className="text-primary">mail : burravenkatesh284@gmail.com</p>
+              <p className="text-primary">password : vbbvv</p>
+              </div>
+
               <h2 className="text-center font-cinzel text-xl md:text-2xl text-white uppercase">
                 {isForgot ? "Reset Password" : "Welcome Back"}
               </h2>

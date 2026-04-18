@@ -44,6 +44,7 @@ export default function AddAddress({
               <option>Select Type</option>
               <option value="home">Home</option>
               <option value="office">Office</option>
+              <option value="other">Other</option>
             </select>
 
             {/* Full Name */}

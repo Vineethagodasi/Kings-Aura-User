@@ -4,8 +4,10 @@ import footerImg from "../assets/images/footerImg.jpg";
 import { FaInstagram, FaTwitter, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import knifeImg from "../assets/images/knife.png";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 function Footer() {
+  const location = useLocation();
   const knifeAnimation = {
     initial: { opacity: 0, rotate: -90, scale: 0.8 },
     whileInView: { opacity: 1, rotate: 0, scale: 1 },
@@ -14,8 +16,12 @@ function Footer() {
   };
 
   const noSpace = [
+    "/wishlist",
     "/cart",
+    "/checkout",
     "/profile",
+    "/collection/",
+    "/product-details",
   ];
 
     const isNoSpace = noSpace.includes(location.pathname) || noSpace.some(path => location.pathname.startsWith(path));

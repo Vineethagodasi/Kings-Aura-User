@@ -25,11 +25,11 @@ function Sidebar({ open, setOpen }) {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuItems = [
-            { name: "HOME", icon: homeIcon },
-            { name: "COLLECTIONS", icon: collectionsIcon },
-            { name: "THE ROYAL WARDROBE", icon: wardrobeIcon },
-            { name: "ABOUT", icon: aboutIcon },
-            { name: "CONTACT", icon: contactIcon },
+            { name: "HOME", icon: homeIcon, path: "/" },
+            { name: "COLLECTIONS", icon: collectionsIcon, path: "/collection" },
+            { name: "THE ROYAL WARDROBE", icon: wardrobeIcon, path: "/wardrobe" },
+            { name: "ABOUT", icon: aboutIcon, path: "/about" },
+            { name: "CONTACT", icon: contactIcon, path: "/contact" },
           ];
 
           const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -112,8 +112,9 @@ function Sidebar({ open, setOpen }) {
 
           {/* Menu Item */}
           {menuItems.map((item, index) => (
-            <div
-              key={index}
+           <Link to={item.path} key={index} className="w-full block">
+
+             <div
               className="flex items-center gap-5 cursor-pointer group"
             >
               <img src={item.icon} className="w-8 h-8 opacity-90" />
@@ -122,6 +123,7 @@ function Sidebar({ open, setOpen }) {
                 {item.name}
               </p>
             </div>
+           </Link>
           ))}
 
           {/* Tagline */}
@@ -136,8 +138,8 @@ function Sidebar({ open, setOpen }) {
               <p>Track Order</p>
             </div>
 
-          <Link to="/profile">
-            <div className="flex items-center gap-3 mt-4">
+          <Link to="/profile" className="w-full block">
+            <div className="flex items-center gap-3">
               <img src={accountIcon} className="w-5 h-5 opacity-80" />
               <p>My Account</p>
             </div>

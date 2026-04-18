@@ -33,7 +33,7 @@ function Header() {
     "/profile",
   ];
 
-  const isWhitePage = whiteHeaderRoutes.includes(location.pathname) || location.pathname.startsWith("/profile");
+  const isWhitePage = whiteHeaderRoutes.includes(location.pathname) || location.pathname.startsWith("/profile") || location.pathname.startsWith("/product-details/");
 
 
   return (
@@ -93,10 +93,12 @@ function Header() {
               </div>
 
               {/* Wishlist */}
+             <Link to="/wishlist">
               <div className="hidden lg:flex flex-col items-center gap-1 cursor-pointer">
                 <img src={wishlist} alt="wishlist" className="w-6 h-6" />
                 <span className="text-xs">Wishlist</span>
               </div>
+             </Link>
 
               {/* Cart */} 
             <Link to="/cart">
