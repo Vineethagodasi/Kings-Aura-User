@@ -10,6 +10,10 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getFilteredProducts, getFilterNames } from "../../constants/product";
 import { useCollections } from "../../hooks/useCollections";
+import { showSuccess } from "../../utils/toast";
+import { addToCart } from "../../constants/cart";
+import { useDispatch, useSelector } from "react-redux";
+import { addCartItem } from "../../redux/cart/cartSlice";
 
 function ProductList({ collectionName = "" }) {
   const [activeImages, setActiveImages] = useState({});
@@ -79,8 +83,8 @@ function ProductList({ collectionName = "" }) {
     try {
       const cleanFilters = Object.fromEntries(
         Object.entries({
-          collection: name,
           ...filters,
+          collection: collectionName || filters.collection,
           page: currentPage,
           limit,
         }).filter(([_, value]) => value !== ""),
@@ -91,18 +95,15 @@ function ProductList({ collectionName = "" }) {
       if (res.data.success) {
         const data = res.data.data;
 
-        if (Array.isArray(data)) {
-          setProducts([]);
-          setTotalProducts(0);
-        } else {
-          setTotalPages(data.totalpages || 1);
-          setTotalProducts(data.totalProducts || 0);
+        const newProducts = data.products || [];
 
-          if (currentPage === 1) {
-            setProducts(data.products || []);
-          } else {
-            setProducts((prev) => [...prev, ...(data.products || [])]);
-          }
+        setTotalPages(data.totalpages || 1);
+        setTotalProducts(data.totalProducts || 0);
+
+        if (currentPage === 1) {
+          setProducts(newProducts);
+        } else {
+          setProducts((prev) => [...prev, ...newProducts]);
         }
       }
     } catch (error) {
@@ -141,6 +142,21 @@ function ProductList({ collectionName = "" }) {
 
   const inputStyle =
     "border border-primary text-heading px-4 py-3 rounded-md min-w-[180px] text-sm focus:outline-none";
+
+    const {items: cartItems} = useSelector((state) => state.cart); 
+    const dispatch = useDispatch();
+
+const handleAddToCart = async (item) => {
+  const payload = {
+    quantity: 1, // Note: your API expects 'quantity'
+    size: item.pricingid?.[0]?.size || "M",
+    color: item.pricingid?.[0]?.color || "Default",
+  };
+
+  dispatch(addCartItem({ id: item._id, data: payload }));
+  showSuccess("Added to cart");
+};
+;
 
   return (
     <>
@@ -347,6 +363,7 @@ function ProductList({ collectionName = "" }) {
 
                   {/* Button */}
                   <button
+                    onClick={() => handleAddToCart(item)}
                     className="mt-5 w-full border border-primaryDark text-md rounded-lg py-3 
                              flex items-center justify-center gap-2
                              text-primaryDark font-medium

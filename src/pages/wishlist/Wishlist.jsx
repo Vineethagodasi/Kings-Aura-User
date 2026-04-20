@@ -1,16 +1,16 @@
 // Cart.jsx
 
-import bgImg from "../assets/images/wishlist/wishlistBg.png"; // your background
+import bgImg from "../../assets/images/wishlist/wishlistBg.png"; // your background
 
-import trash from "../assets/images/cart/trash.png"; // o
+import trash from "../../assets/images/cart/trash.png"; // o
 import { Link } from "react-router-dom";
-import img1 from "../assets/images/product1.png";
-import img2 from "../assets/images/product1.png";
-import img3 from "../assets/images/product1.png";
-import img4 from "../assets/images/product1.png";
-import closeIcon from "../assets/images/wishlist/close.png";
-import crown from "../assets/images/crown.png";
-import cart from "../assets/images/addcart.png";
+import img1 from "../../assets/images/product1.png";
+import img2 from "../../assets/images/product1.png";
+import img3 from "../../assets/images/product1.png";
+import img4 from "../../assets/images/product1.png";
+import closeIcon from "../../assets/images/wishlist/close.png";
+import crown from "../../assets/images/crown.png";
+import cart from "../../assets/images/addcart.png";
 import { useState } from "react";
 
 function Wishlist() {

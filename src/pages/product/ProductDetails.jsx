@@ -336,7 +336,7 @@ function ProductDetails() {
                   className="bg-white rounded-xl p-4 py-8 relative group overflow-hidden shadow-sm hover:shadow-lg transition-all"
                 >
                   {/* Wishlist Icon */}
-                  <div className="absolute top-6 right-8 w-10 h-10 border rounded-full flex items-center justify-center bg-white/80 hover:bg-primary transition-colors cursor-pointer z-10">
+                  <div className="absolute top-6 right-8 w-10 h-10 border rounded-full flex items-center justify-center bg-white/80 cursor-pointer z-10">
                     <img src={crown} className="w-5 h-5" alt="crown" />
                   </div>
 

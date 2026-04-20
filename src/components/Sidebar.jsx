@@ -145,6 +145,13 @@ function Sidebar({ open, setOpen }) {
             </div>
           </Link>
 
+                 <Link to="/cart" className="w-full block">
+            <div className="flex items-center gap-3">
+              <img src={accountIcon} className="w-5 h-5 opacity-80" />
+              <p>My Cart</p>
+            </div>
+          </Link>
+
             <div className="flex items-center gap-3">
               <img src={wishlistIcon} className="w-5 h-5 opacity-80" />
               <p>Wishlist</p>

@@ -10,15 +10,16 @@ import { easeOut, motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import closeIcon from "../assets/images/close.png";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCart } from "../redux/cart/cartSlice";
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
-
   useEffect(() => {
-   // Normal scroll behavior
+    // Normal scroll behavior
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
@@ -27,14 +28,20 @@ function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-    // ✅ Pages where header should ALWAYS be white
-  const whiteHeaderRoutes = [
-    "/product-details",
-    "/profile",
-  ];
+  // ✅ Pages where header should ALWAYS be white
+  const whiteHeaderRoutes = ["/product-details", "/profile"];
 
-  const isWhitePage = whiteHeaderRoutes.includes(location.pathname) || location.pathname.startsWith("/profile") || location.pathname.startsWith("/product-details/");
+  const isWhitePage =
+    whiteHeaderRoutes.includes(location.pathname) ||
+    location.pathname.startsWith("/profile") ||
+    location.pathname.startsWith("/product-details/");
 
+  const dispatch = useDispatch();
+  const { items: cartItems } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
 
   return (
     <>
@@ -47,7 +54,7 @@ function Header() {
         //   ease: easeOut,
         // }}
         className={`fixed top-0 left-0 w-full z-50 ${
-         isWhitePage || scrolled
+          isWhitePage || scrolled
             ? "bg-white shadow-md transition-all duration-30"
             : "bg-transparent"
         }`}
@@ -59,13 +66,13 @@ function Header() {
             }`}
           >
             {/* Logo */}
-           <Link to="/">
-            <img
-              src={logo}
-              alt="logo"
-              className="w-full max-w-[100px] md:max-w-[160px]"
-            />
-           </Link>
+            <Link to="/">
+              <img
+                src={logo}
+                alt="logo"
+                className="w-full max-w-[100px] md:max-w-[160px]"
+              />
+            </Link>
 
             {/* Right Side */}
             <div className="flex items-center gap-2 md:gap-6 cursor-pointer ">
@@ -73,7 +80,9 @@ function Header() {
               <div
                 onClick={() => setShowSearch(true)}
                 className={`flex items-center gap-2 md:border md:rounded-full px-4 py-3 max-w-[230px] cursor-pointer ${
-                  isWhitePage || scrolled ? "border-black/30" : "border-white/60"
+                  isWhitePage || scrolled
+                    ? "border-black/30"
+                    : "border-white/60"
                 }`}
               >
                 <img
@@ -93,20 +102,25 @@ function Header() {
               </div>
 
               {/* Wishlist */}
-             <Link to="/wishlist">
-              <div className="hidden lg:flex flex-col items-center gap-1 cursor-pointer">
-                <img src={wishlist} alt="wishlist" className="w-6 h-6" />
-                <span className="text-xs">Wishlist</span>
-              </div>
-             </Link>
+              <Link to="/wishlist">
+                <div className="hidden lg:flex flex-col items-center gap-1 cursor-pointer">
+                  <img src={wishlist} alt="wishlist" className="w-6 h-6" />
+                  <span className="text-xs">Wishlist</span>
+                </div>
+              </Link>
 
-              {/* Cart */} 
-            <Link to="/cart">
-              <div className="hidden lg:flex flex-col items-center gap-1 cursor-pointer">
-                <img src={cart} alt="cart" className="w-6 h-6" />
-                <span className="text-xs">My Cart</span>
-              </div>
-            </Link>
+              {/* Cart */}
+              <Link to="/cart">
+                <div className="relative hidden lg:flex flex-col items-center gap-1 cursor-pointer">
+                  <img src={cart} alt="cart" className="w-6 h-6" />
+                  <span className="text-xs">My Cart</span>
+                  {cartItems.length > 0 && (
+                    <span className="absolute -top-3 -right-2 bg-primary text-white rounded-full px-[8px] py-[2px] text-xs">
+                      {cartItems.length}
+                    </span>
+                  )}
+                </div>
+              </Link>
 
               {/* Menu */}
               <div

@@ -3,7 +3,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Layout from "../components/Layout";
-import Cart from "../pages/Cart";
+import Cart from "../pages/cart/Cart";
 import ScrollToTop from "../components/ScrollToTop";
 import Collection from "../pages/collection/Collection";
 import CollectionDetails from "../pages/collection/CollectionDetails";
@@ -21,7 +21,7 @@ import Address from "../pages/profile/address/Address";
 import Payment from "../pages/profile/Payment";
 import Settings from "../pages/profile/Settings";
 import Security from "../pages/profile/Security";
-import Wishlist from "../pages/Wishlist";
+import Wishlist from "../pages/wishlist/Wishlist";
 import Product from "../pages/product/Product";
 
 function AppRoutes() {
