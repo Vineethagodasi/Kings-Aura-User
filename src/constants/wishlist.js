@@ -1,16 +1,16 @@
 import axiosInstance from "../services/axiosInstance";
 
-// GET
+// GET wishlist
 export const getWishlist = () => {
   return axiosInstance.get("/user/getwishlist");
 };
 
-// ADD
-export const addToWishlist = (data) => {
+// ADD wishlist
+export const addWishlist = (data) => {
   return axiosInstance.post("/user/wishlist", data);
 };
 
-// DELETE
-export const deleteWishlistItem = (wishlistid) => {
-  return axiosInstance.delete(`/user/deletewishlist?wishlistid=${wishlistid}`);
+// DELETE wishlist
+export const deleteWishlistItem = (id) => {
+  return axiosInstance.delete(`/user/deletewishlist?wishlistid=${id}`);
 };

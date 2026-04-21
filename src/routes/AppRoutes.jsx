@@ -18,7 +18,7 @@ import Sidebar from "../components/profileSidebar/Sidebar";
 import Dashboard from "../pages/profile/Dashboard";
 import Orders from "../pages/profile/Orders";
 import Address from "../pages/profile/address/Address";
-import Payment from "../pages/profile/Payment";
+import Payment from "../pages/payment";
 import Settings from "../pages/profile/Settings";
 import Security from "../pages/profile/Security";
 import Wishlist from "../pages/wishlist/Wishlist";
@@ -46,6 +46,7 @@ function AppRoutes() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment" element={<Payment />} />
           
               <Route>
             <Route path="/profile" element={<Sidebar />}>

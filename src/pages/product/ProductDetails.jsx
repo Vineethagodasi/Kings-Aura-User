@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import arrow from "../../assets/images/collection/arrow.png";
-import crown from "../../assets/images/productDetails/crown.png";
+import crown from "../../assets/images/crown.png";
+import crown2 from "../../assets/images/productDetails/crown.png";
 import cart from "../../assets/images/addcart.png";
 import exploreImg from "../../assets/images/exploreBtn.png";
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
 import { getProductById } from "../../constants/product";
+import { addCartItem } from "../../redux/cart/cartSlice";
+import {
+  addToWishlist,
+  deleteWishlist,
+  fetchWishlist,
+  removeWishlistItem,
+} from "../../redux/wishlist/wishlistSlice";
+import { showError, showSuccess } from "../../utils/toast";
+import { useDispatch, useSelector } from "react-redux";
+import ProtectedButton from "../../components/ProtectedButton";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -44,6 +55,56 @@ function ProductDetails() {
 
     fetchProduct();
   }, [id]);
+
+  const { items: cartItems } = useSelector((state) => state.cart);
+  const { items: wishlistItems } = useSelector((state) => state.wishlist);
+
+  const dispatch = useDispatch();
+
+  const handleAddToCart = async (item) => {
+    const payload = {
+      quantity: 1, // Note: your API expects 'quantity'
+      size: item.pricingid?.[0]?.size || "M",
+      color: item.pricingid?.[0]?.color || "Default",
+    };
+
+    dispatch(addCartItem({ id: item._id, data: payload }));
+    showSuccess("Added to cart");
+  };
+
+  const handleWishlistToggle = async (item) => {
+    const existingItem = wishlistItems.find(
+      (w) => w.productId._id === item._id,
+    );
+
+    if (existingItem) {
+      // 🔴 REMOVE
+      dispatch(removeWishlistItem(existingItem._id));
+
+      try {
+        const res = await dispatch(deleteWishlist(existingItem._id)).unwrap();
+        showSuccess("Product deleted from wishlist");
+      } catch {
+        dispatch(fetchWishlist());
+        showError("Failed to remove");
+      }
+    } else {
+      // 🟢 ADD
+      const payload = {
+        productid: item._id,
+        size: item.pricingid?.[0]?.size || "M",
+        color: item.pricingid?.[0]?.color || "Default",
+        productprice: 0,
+      };
+
+      try {
+        const res = await dispatch(addToWishlist(payload)).unwrap();
+        showSuccess(res.message || "Added to wishlist");
+      } catch (err) {
+        showError(err?.message || "Failed to add");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -323,61 +384,71 @@ function ProductDetails() {
 
             {/* Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {relatedProducts.map((item, index) => (
-                <motion.div
-                  key={item._id}
-                  initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.1,
-                  }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  className="bg-white rounded-xl p-4 py-8 relative group overflow-hidden shadow-sm hover:shadow-lg transition-all"
-                >
-                  {/* Wishlist Icon */}
-                  <div className="absolute top-6 right-8 w-10 h-10 border rounded-full flex items-center justify-center bg-white/80 cursor-pointer z-10">
-                    <img src={crown} className="w-5 h-5" alt="crown" />
-                  </div>
+              {relatedProducts.map((item, index) => {
+                const isWishlisted = wishlistItems.some(
+                  (w) => w.productId._id === item._id,
+                );
 
-                  {/* Image */}
-                  <div className="overflow-hidden aspect-square flex items-center justify-center">
-                    <Link to={`/product-details/${item._id}`}>
-                      <img
-                        src={item.imagesUrl?.[0] || cart}
-                        alt={item.productname}
-                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </Link>
-                  </div>
-
-                  {/* Content */}
-                  <div className="mt-6 text-center">
-                    <h3 className="text-[17px] text-heading font-medium truncate px-2">
-                      {item.productname}
-                    </h3>
-                    <p className="text-xs text-subheading mt-1 uppercase tracking-widest">
-                      {item.category}
-                    </p>
-
-                    <p className="text-primaryDark text-xl mt-3 font-semibold">
-                      {getPriceRange(item.pricingid)}
-                    </p>
-                  </div>
-
-                  {/* Button */}
-                  <button
-                    className="mt-6 w-full border border-primaryDark text-md rounded-lg py-3 
-                            flex items-center justify-center gap-2
-                            text-primaryDark font-medium
-                            transition-all duration-300
-                            hover:bg-primary hover:text-black hover:border-primary"
+                return (
+                  <motion.div
+                    key={item._id}
+                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{
+                      duration: 0.6,
+                      delay: index * 0.1,
+                    }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    className="bg-white rounded-xl p-4 py-8 relative group overflow-hidden shadow-sm hover:shadow-lg transition-all"
                   >
-                    <img src={cart} className="w-6 h-6" alt="cart" />
-                    Add to Cart
-                  </button>
-                </motion.div>
-              ))}
+                    {/* Wishlist Icon */}
+                    <ProtectedButton onClick={() => handleWishlistToggle(item)}>
+                      <div className="absolute top-6 right-8 w-10 h-10 border rounded-full flex items-center justify-center bg-white/80 cursor-pointer z-10">
+                        <img
+                          src={isWishlisted ? crown2 : crown}
+                          className="w-5 h-5"
+                          alt="crown"
+                        />
+                      </div>
+                    </ProtectedButton>
+
+                    {/* Image */}
+                    <div className="overflow-hidden aspect-square flex items-center justify-center">
+                      <Link to={`/product-details/${item._id}`}>
+                        <img
+                          src={item.imagesUrl?.[0] || cart}
+                          alt={item.productname}
+                          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </Link>
+                    </div>
+
+                    {/* Content */}
+                    <div className="mt-6 text-center">
+                      <h3 className="text-[17px] text-heading font-medium truncate px-2">
+                        {item.productname}
+                      </h3>
+                      <p className="text-xs text-subheading mt-1 uppercase tracking-widest">
+                        {item.category}
+                      </p>
+
+                      <p className="text-primaryDark text-xl mt-3 font-semibold">
+                        {getPriceRange(item.pricingid)}
+                      </p>
+                    </div>
+
+                    {/* Button */}
+                    <ProtectedButton
+                      onClick={() => handleAddToCart(item)}
+                      className=""
+                      addCartCss={true}
+                    >
+                      <img src={cart} className="w-7 h-7" />
+                      Add to Cart
+                    </ProtectedButton>
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* Bottom Button */}

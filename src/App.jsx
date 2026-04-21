@@ -5,6 +5,8 @@ import IntroOverlay from "./components/IntroOverlay"
 import { useDispatch } from "react-redux"
 import { setUser } from "./redux/user/userSlice"
 import { getMe } from "./constants/auth"
+import { fetchCart } from "./redux/cart/cartSlice"
+import { fetchWishlist } from "./redux/wishlist/wishlistSlice"
 
 function App() {
   const dispatch = useDispatch();
@@ -39,6 +41,16 @@ function App() {
         localStorage.removeItem("token");
       });
   }, [dispatch]);
+
+
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    dispatch(fetchCart());
+    dispatch(fetchWishlist()); // ✅ ADD THIS
+  }
+}, []);
 
 
 

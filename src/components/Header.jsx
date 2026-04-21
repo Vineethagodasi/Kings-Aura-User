@@ -38,10 +38,13 @@ function Header() {
 
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+    if (isLoggedIn) {
+      dispatch(fetchCart());
+    }
+  }, [dispatch, isLoggedIn]);
 
   return (
     <>

@@ -1,96 +1,138 @@
-import React from "react";
+import bgImg from "../../assets/images/cart/cartBg.png";
 
-export default function PaymentMethods() {
-  const cards = [
-    {
-      id: 1,
-      bank: "HDFC Bank",
-      number: "•••• •••• •••• 4587",
-      name: "Ajay Beerla",
-      expiry: "12/28",
-      default: true,
-    },
-    {
-      id: 2,
-      bank: "HDFC Bank",
-      number: "•••• •••• •••• 4587",
-      name: "Ajay Beerla",
-      expiry: "12/28",
-      default: false,
-    },
-  ];
+function Payment() {
+return (
+<section
+className="min-h-screen flex items-center justify-center bg-cover bg-center relative px-4"
+style={{ backgroundImage: `url(${bgImg}) ` }}
+>
+{/* Dark overlay */} <div className="absolute inset-0 bg-black/40"></div>
 
-  return (
-    <div className="w-full">
+  {/* Main Container */}
+  <div className="relative w-full max-w-6xl grid lg:grid-cols-3 gap-6 backdrop-blur-xl bg-white/10 p-8 rounded-2xl shadow-2xl mt-24">
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6 md:mb-10">
+    {/* LEFT - PAYMENT */}
+    <div className="lg:col-span-2 text-white">
+      <h2 className="text-lg mb-4 tracking-wide">PAYMENT METHOD</h2>
 
-        <div>
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-cinzel font-bold text-heading">Payment Methods</h1>
-          <p className="text-sm md:text-base text-gray-600 mt-2">
-            Manage your cards and payment options securely
-          </p>
+      {/* Payment Options */}
+      <div className="space-y-2 mb-6 text-sm">
+        <label className="flex items-center gap-2">
+          <input type="radio" name="payment" /> UPI
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="radio" name="payment" defaultChecked /> Credit/Debit Card
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="radio" name="payment" /> Net Banking
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="radio" name="payment" /> Cash on Delivery
+        </label>
+      </div>
+
+      {/* Card Form */}
+      <div className="space-y-4">
+        <input
+          type="text"
+          placeholder="Card Number"
+          className="w-full p-3 rounded-md bg-white text-black text-sm outline-none"
+        />
+
+        <input
+          type="text"
+          placeholder="Card Holder Name"
+          className="w-full p-3 rounded-md bg-white text-black text-sm outline-none"
+        />
+
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="text"
+            placeholder="Expiry Date"
+            className="p-3 rounded-md bg-white text-black text-sm outline-none"
+          />
+          <input
+            type="text"
+            placeholder="CVV"
+            className="p-3 rounded-md bg-white text-black text-sm outline-none"
+          />
         </div>
-
-        <button className="bg-primary text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-primaryDark transition flex items-center gap-2 text-sm md:text-base whitespace-nowrap">
-          + Add New Method
-        </button>
-
       </div>
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
+      {/* Secure Text */}
+      <p className="text-xs text-white/70 mt-4">
+        🔒 Your payment is securely encrypted
+      </p>
 
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            className={`relative p-6 md:p-12 lg:py-16 rounded-xl md:rounded-2xl text-white 
-            bg-gradient-to-br from-[#111] to-[#3a3a3a]
-            ${card.default ? "border-2 border-primary" : ""}`}
-          >
-
-            {/* Badge */}
-            <span className="absolute top-4 md:top-6 right-4 md:right-6 text-xs px-2 md:px-3 py-0.5 md:py-1 rounded-full bg-primary/20 text-primary">
-              {card.default ? "Default" : "Set as Default"}
-            </span>
-
-            {/* Bank */}
-            <p className="text-xs md:text-sm text-gray-300 mb-4 md:mb-6">
-              {card.bank}
-            </p>
-
-            {/* Card Number */}
-            <h3 className="text-base md:text-lg tracking-widest mb-4 md:mb-6">
-              {card.number}
-            </h3>
-
-            {/* Bottom */}
-            <div className="flex justify-between items-center">
-
-              <div>
-                <p className="text-xs md:text-sm text-gray-300">
-                  {card.name}
-                </p>
-              </div>
-
-              <div className="text-xs md:text-sm text-gray-300">
-                {card.expiry}
-              </div>
-
-            </div>
-
-            {/* Mastercard */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
-              alt="mastercard"
-              className="absolute right-4 md:right-6 bottom-1/2 w-8 md:w-10"
-            />
-
-          </div>
-        ))}
-
-      </div>
+      {/* Pay Button */}
+      <button className="mt-6 w-full bg-yellow-600 hover:bg-yellow-500 text-black py-3 rounded-lg font-medium">
+        Pay ₹9,998 →
+      </button>
     </div>
-  );
+
+    {/* RIGHT - SUMMARY */}
+    <div className="bg-white rounded-xl p-6 text-black">
+      <h3 className="text-md font-semibold mb-4">ORDER SUMMARY</h3>
+
+      {/* Item */}
+      <div className="flex gap-3 mb-4">
+        <div className="w-12 h-14 bg-gray-200 rounded"></div>
+        <div className="flex-1 text-sm">
+          <p>The Sovereign Linen Shirt</p>
+          <p className="text-xs text-gray-500">Size: M</p>
+        </div>
+        <p className="text-sm">₹4,999</p>
+      </div>
+
+      <div className="flex gap-3 mb-4">
+        <div className="w-12 h-14 bg-gray-200 rounded"></div>
+        <div className="flex-1 text-sm">
+          <p>The Regal Silk Shirt</p>
+          <p className="text-xs text-gray-500">Size: M</p>
+        </div>
+        <p className="text-sm">₹3,999</p>
+      </div>
+
+      {/* Coupon */}
+      <div className="flex border rounded-md overflow-hidden mb-4">
+        <input
+          type="text"
+          placeholder="DISCOUNT CODE"
+          className="flex-1 px-3 py-2 text-sm outline-none"
+        />
+        <button className="px-4 text-sm">APPLY</button>
+      </div>
+
+      {/* Pricing */}
+      <div className="text-sm space-y-2">
+        <div className="flex justify-between">
+          <span>Subtotal</span>
+          <span>₹3,398.00</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Discount</span>
+          <span>₹497.00</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Shipping</span>
+          <span>₹90.00</span>
+        </div>
+      </div>
+
+      <div className="border-t my-4"></div>
+
+      <div className="flex justify-between font-semibold">
+        <span>Total</span>
+        <span>₹2,908.00</span>
+      </div>
+
+      <p className="text-xs text-center text-gray-500 mt-4">
+        🔒 Secure Checkout 100% safe payment
+      </p>
+    </div>
+  </div>
+</section>
+);
 }
+
+export default Payment;

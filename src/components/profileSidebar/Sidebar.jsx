@@ -13,14 +13,17 @@ import {
 } from "lucide-react";
 import closeIcon from "../../assets/images/close.png";
 import { useSelector, useDispatch } from "react-redux";
-import { profilePictureUpload, getMe } from "../../constants/auth";
-import { setUser } from "../../redux/user/userSlice";
+import { profilePictureUpload, getMe, logoutUser } from "../../constants/auth";
+import { setUser, clearUser } from "../../redux/user/userSlice";
+import { clearCart } from "../../redux/cart/cartSlice";
 import { showSuccess } from "../../utils/toast";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profilePic, setProfilePic] = useState();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const menu = [
     { name: "Dashboard", path: "/profile", icon: Crown },
@@ -76,6 +79,23 @@ export default function Sidebar() {
       console.log("Upload success", res.data);
     } catch (err) {
       console.error("Upload failed", err);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      localStorage.removeItem("token");
+      dispatch(clearUser());
+      dispatch(clearCart());
+      showSuccess("Logged out successfully");
+      navigate("/");
+    } catch (err) {
+      console.error("Logout error", err);
+      localStorage.removeItem("token");
+      dispatch(clearUser());
+      dispatch(clearCart());
+      navigate("/");
     }
   };
 
@@ -178,7 +198,10 @@ export default function Sidebar() {
               })}
 
               {/* Logout */}
-              <div className="flex items-center gap-3 px-3 md:px-4 py-2 md:py-3 text-gray-600 hover:bg-gray-200 rounded-xl cursor-pointer mt-3 md:mt-4 transition-colors text-sm md:text-base">
+              <div
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-3 md:px-4 py-2 md:py-3 text-gray-600 hover:bg-gray-200 rounded-xl cursor-pointer mt-3 md:mt-4 transition-colors text-sm md:text-base"
+              >
                 <LogOut size={18} className="md:w-[20px] md:h-[20px]" />
                 <span className="font-inter">Log out</span>
               </div>

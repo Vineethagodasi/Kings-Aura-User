@@ -1,5 +1,6 @@
 // Checkout.jsx
 
+import { Link } from "react-router-dom";
 import bgImg from "../assets/images/cart/cartBg.png";
 import exploreBtn from "../assets/images/exploreBtn.png";
 import img1 from "../assets/images/product1.png";
@@ -180,10 +181,12 @@ function Checkout() {
             </div>
 
             {/* Button */}
+         <Link to="/payment">
             <button className="mt-5 w-full bg-primary text-black py-3 rounded-lg flex items-center justify-center gap-2 font-medium">
               <img src={exploreBtn} className="w-5 h-5" />
               Proceed to Checkout
             </button>
+         </Link>
 
             {/* Secure text */}
             <p className="text-xs text-center text-gray-500 mt-3">

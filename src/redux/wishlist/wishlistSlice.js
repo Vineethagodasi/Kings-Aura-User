@@ -1,34 +1,39 @@
+// wishlistSlice.js
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getWishlist,
-  addToWishlist,
+  addWishlist,
   deleteWishlistItem,
 } from "../../constants/wishlist";
 
-// 🔥 FETCH
+// 🔥 GET WISHLIST
 export const fetchWishlist = createAsyncThunk(
   "wishlist/fetchWishlist",
   async () => {
     const res = await getWishlist();
-    return res.data.data?.wishlist || [];
+    return res.data.data.wishlist || [];
   }
 );
 
-// 🔥 ADD
-export const addWishlistItem = createAsyncThunk(
-  "wishlist/addWishlistItem",
-  async (data) => {
-    const res = await addToWishlist(data);
-    return res.data.data; // new wishlist item
+// 🔥 ADD TO WISHLIST
+export const addToWishlist = createAsyncThunk(
+  "wishlist/addToWishlist",
+  async (data, { dispatch }) => {
+    const res = await addWishlist(data);
+
+    dispatch(fetchWishlist());
+
+    return res.data; // ✅ return backend response
   }
 );
 
-// 🔥 DELETE
+// 🔥 DELETE WISHLIST ITEM (No refetch)
 export const deleteWishlist = createAsyncThunk(
   "wishlist/deleteWishlist",
-  async (wishlistid) => {
-    await deleteWishlistItem(wishlistid);
-    return wishlistid;
+  async (id) => {
+    const res = await deleteWishlistItem(id);
+    return { id, message: res.data.message }; // ✅ return message
   }
 );
 
@@ -38,22 +43,35 @@ const wishlistSlice = createSlice({
     items: [],
     loading: false,
   },
-  reducers: {},
+
+  reducers: {
+    // 🔥 Optimistic remove
+    removeWishlistItem: (state, action) => {
+      state.items = state.items.filter(
+        (item) => item._id !== action.payload
+      );
+    },
+
+    // 🔥 Clear on logout
+    clearWishlist: (state) => {
+      state.items = [];
+    },
+  },
 
   extraReducers: (builder) => {
     builder
-      // FETCH
+      .addCase(fetchWishlist.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchWishlist.fulfilled, (state, action) => {
+        state.loading = false;
         state.items = action.payload;
       })
-
-      // ADD
-      .addCase(addWishlistItem.fulfilled, (state, action) => {
-        state.items.push(action.payload[0]); 
-        // ⚠️ your API returns array → take first item
+      .addCase(fetchWishlist.rejected, (state) => {
+        state.loading = false;
       })
 
-      // DELETE
+      // Handle delete success
       .addCase(deleteWishlist.fulfilled, (state, action) => {
         state.items = state.items.filter(
           (item) => item._id !== action.payload
@@ -62,4 +80,5 @@ const wishlistSlice = createSlice({
   },
 });
 
+export const { removeWishlistItem, clearWishlist } = wishlistSlice.actions;
 export default wishlistSlice.reducer;

@@ -3,7 +3,7 @@ import closeIcon from "../assets/images/close.png";
 import menuIcon from "../assets/images/addcart.png"; // use same for all
 import homeIcon from "../assets/menuicons/home.png";
 import aboutIcon from "../assets/menuicons/about.png";
-import contactIcon from "../assets/menuicons/contact.png"; 
+import contactIcon from "../assets/menuicons/contact.png";
 import collectionsIcon from "../assets/menuicons/collections.png";
 import wardrobeIcon from "../assets/menuicons/wordrobe.png";
 import trackOrderIcon from "../assets/menuicons/trackorder.png";
@@ -14,67 +14,71 @@ import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, clearUser } from "../redux/user/userSlice";
+import { clearCart } from "../redux/cart/cartSlice";
 import { logoutUser } from "../constants/auth";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { showSuccess } from "../utils/toast";
-
+import { clearWishlist } from "../redux/wishlist/wishlistSlice";
 
 function Sidebar({ open, setOpen }) {
-
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuItems = [
-            { name: "HOME", icon: homeIcon, path: "/" },
-            { name: "COLLECTIONS", icon: collectionsIcon, path: "/collection" },
-            { name: "THE ROYAL WARDROBE", icon: wardrobeIcon, path: "/wardrobe" },
-            { name: "ABOUT", icon: aboutIcon, path: "/about" },
-            { name: "CONTACT", icon: contactIcon, path: "/contact" },
-          ];
+    { name: "HOME", icon: homeIcon, path: "/" },
+    { name: "COLLECTIONS", icon: collectionsIcon, path: "/collection" },
+    { name: "THE ROYAL WARDROBE", icon: wardrobeIcon, path: "/wardrobe" },
+    { name: "ABOUT", icon: aboutIcon, path: "/about" },
+    { name: "CONTACT", icon: contactIcon, path: "/contact" },
+  ];
 
-          const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const { items: cartItems } = useSelector((state) => state.cart);
 
-          const dispatch = useDispatch();
-          const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-          const confirmLogout = async () => {
-            try {
-              // Step 1: Call logout API
-              await logoutUser();
-              showSuccess("Logged out successfully");
+  const confirmLogout = async () => {
+    try {
+      // Step 1: Call logout API
+      await logoutUser();
+      showSuccess("Logged out successfully");
 
-              // Step 2: Clear token from localStorage
-              localStorage.removeItem("token");
+      // Step 2: Clear token from localStorage
+      localStorage.removeItem("token");
 
-              // Step 3: Clear user from Redux
-              dispatch(clearUser());
+      // Step 3: Clear user from Redux
+      dispatch(clearUser());
+      dispatch(clearCart());
+      dispatch(clearWishlist());
 
-              // Step 4: Close modal
-              setShowLogoutModal(false);
+      // Step 4: Close modal
+      setShowLogoutModal(false);
 
-              // Step 5: Close sidebar
-              setOpen(false);
+      // Step 5: Close sidebar
+      setOpen(false);
 
-              // Step 6: Navigate to home
-              navigate("/");
-            } catch (err) {
-              console.log("Logout error:", err);
-              // Even if API fails, still clear local state
-              localStorage.removeItem("token");
-              dispatch(clearUser());
-              setShowLogoutModal(false);
-              navigate("/");
-            }
-          };
+      // Step 6: Navigate to home
+      navigate("/login");
+    } catch (err) {
+      console.log("Logout error:", err);
+      // Even if API fails, still clear local state
+      localStorage.removeItem("token");
+      dispatch(clearUser());
+      dispatch(clearCart());
+      dispatch(clearWishlist());
+      setShowLogoutModal(false);
+      navigate("/");
+    }
+  };
 
-          const handleLogoutClick = () => {
-            setShowLogoutModal(true);
-          };
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true);
+  };
 
-          useEffect(() => {
-            setOpen(false); // Close sidebar on route change
-          }, [location.pathname]);
-        
+  useEffect(() => {
+    setOpen(false); // Close sidebar on route change
+  }, [location.pathname]);
 
   return (
     <>
@@ -107,60 +111,57 @@ function Sidebar({ open, setOpen }) {
         </div>
 
         {/* Menu */}
-      <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center">
           <div className="px-2 mt-4 text-white space-y-8">
+            {/* Menu Item */}
+            {menuItems.map((item, index) => (
+              <Link to={item.path} key={index} className="w-full block">
+                <div className="flex items-center gap-5 cursor-pointer group">
+                  <img src={item.icon} className="w-8 h-8 opacity-90" />
 
-          {/* Menu Item */}
-          {menuItems.map((item, index) => (
-           <Link to={item.path} key={index} className="w-full block">
+                  <p className="font-cinzel text-xl tracking-wide group-hover:text-primary transition">
+                    {item.name}
+                  </p>
+                </div>
+              </Link>
+            ))}
 
-             <div
-              className="flex items-center gap-5 cursor-pointer group"
-            >
-              <img src={item.icon} className="w-8 h-8 opacity-90" />
+            {/* Tagline */}
+            <p className="text-sm text-white/60 mt-8">
+              Curated for those who lead with presence
+            </p>
 
-              <p className="font-cinzel text-xl tracking-wide group-hover:text-primary transition">
-                {item.name}
-              </p>
+            {/* Bottom Links */}
+            <div className="mt-6 space-y-4 text-white/80">
+              <div className="flex items-center gap-3">
+                <img src={trackOrderIcon} className="w-5 h-5 opacity-80" />
+                <p>Track Order</p>
+              </div>
+
+              <Link to="/profile" className="w-full block">
+                <div className="flex items-center gap-3">
+                  <img src={accountIcon} className="w-5 h-5 opacity-80" />
+                  <p>My Account</p>
+                </div>
+              </Link>
+
+              <Link to="/cart" className="w-full block">
+                <div className="flex items-center gap-3">
+                  <img src={accountIcon} className="w-5 h-5 opacity-80" />
+                  <p>My Cart</p>
+                </div>
+              </Link>
+
+              <Link to="/wishlist" className="w-full block">
+                <div className="flex items-center gap-3">
+                  <img src={wishlistIcon} className="w-5 h-5 opacity-80" />
+                  <p>Wishlist</p>
+                </div>
+              </Link>
             </div>
-           </Link>
-          ))}
 
-          {/* Tagline */}
-          <p className="text-sm text-white/60 mt-8">
-            Curated for those who lead with presence
-          </p>
-
-          {/* Bottom Links */}
-          <div className="mt-6 space-y-4 text-white/80">
-            <div className="flex items-center gap-3">
-              <img src={trackOrderIcon} className="w-5 h-5 opacity-80" />
-              <p>Track Order</p>
-            </div>
-
-          <Link to="/profile" className="w-full block">
-            <div className="flex items-center gap-3">
-              <img src={accountIcon} className="w-5 h-5 opacity-80" />
-              <p>My Account</p>
-            </div>
-          </Link>
-
-                 <Link to="/cart" className="w-full block">
-            <div className="flex items-center gap-3">
-              <img src={accountIcon} className="w-5 h-5 opacity-80" />
-              <p>My Cart</p>
-            </div>
-          </Link>
-
-            <div className="flex items-center gap-3">
-              <img src={wishlistIcon} className="w-5 h-5 opacity-80" />
-              <p>Wishlist</p>
-            </div>
-          </div>
-
-          {/* Social Icons */}
+            {/* Social Icons */}
             <div className="flex justify-center gap-6 mb-6 ">
-
               <div className="w-10 h-10 border border-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/20 hover:scale-110 transition">
                 <FaInstagram className="text-primary text-lg" />
               </div>
@@ -172,27 +173,28 @@ function Sidebar({ open, setOpen }) {
               <div className="w-10 h-10 border border-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/20 hover:scale-110 transition">
                 <FaYoutube className="text-primary text-lg" />
               </div>
-
             </div>
 
-          {/* Button */}
+            {/* Button */}
 
-
-          { isLoggedIn ? (
-            <button onClick={handleLogoutClick} className="my-8 bg-primary text-black px-6 py-3 font-semibold rounded-xl w-full flex items-center justify-center gap-3 font-medium">
-              {/* <img src={exploreImg} className="w-5 h-5" /> */}
-              Logout
-            </button>
-          ) : (
-            <Link to="/login">
-            <button className="my-8 bg-primary text-black px-6 py-3 font-semibold rounded-xl w-full flex items-center justify-center gap-3 font-medium">
-              {/* <img src={exploreImg} className="w-5 h-5" /> */}
-              Sign-In
-            </button>
-          </Link>
-          )}
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogoutClick}
+                className="my-8 bg-primary text-black px-6 py-3 font-semibold rounded-xl w-full flex items-center justify-center gap-3 font-medium"
+              >
+                {/* <img src={exploreImg} className="w-5 h-5" /> */}
+                Logout
+              </button>
+            ) : (
+              <Link to="/login">
+                <button className="my-8 bg-primary text-black px-6 py-3 font-semibold rounded-xl w-full flex items-center justify-center gap-3 font-medium">
+                  {/* <img src={exploreImg} className="w-5 h-5" /> */}
+                  Sign-In
+                </button>
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
       </div>
 
       {/* Logout Confirmation Modal */}
@@ -216,7 +218,9 @@ function Sidebar({ open, setOpen }) {
                 {/* Decorative Line */}
                 <div className="flex items-center gap-4 mb-6 justify-center">
                   <div className="h-[2px] w-12 bg-white/60"></div>
-                  <span className="text-white/70 text-xs tracking-[0.3em]">⚠</span>
+                  <span className="text-white/70 text-xs tracking-[0.3em]">
+                    ⚠
+                  </span>
                   <div className="h-[2px] w-12 bg-white/60"></div>
                 </div>
 
@@ -227,7 +231,8 @@ function Sidebar({ open, setOpen }) {
 
                 {/* Message */}
                 <p className="text-center text-white/70 text-sm md:text-base mb-8">
-                  Are you sure you want to logout? You'll need to sign in again to access your account.
+                  Are you sure you want to logout? You'll need to sign in again
+                  to access your account.
                 </p>
 
                 {/* Buttons */}

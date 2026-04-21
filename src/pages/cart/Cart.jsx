@@ -21,9 +21,12 @@ import { showSuccess } from "../../utils/toast";
 function Cart() {
   const dispatch = useDispatch();
   const { items: cartItems, loading } = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(fetchCart());
+    if (isLoggedIn) {
+      dispatch(fetchCart());
+    }
   }, [dispatch]);
 
   const handleUpdate = async (id, qty) => {
@@ -231,15 +234,19 @@ function Cart() {
                 <img src={cartIcon} className="w-12 h-12" alt="Cart" />
               </div>
               <h3 className="text-white font-cinzel text-2xl md:text-3xl">
-                Your Cart is Empty
+                {isLoggedIn ? "Your Cart is Empty" : "you haven't logged in"} <br />
+                <span className="text-primary">
+                  {!isLoggedIn && "please login"}
+                </span>
               </h3>
               <p className="text-white/60 mt-4 max-w-sm mx-auto">
-                You haven't added any royal pieces to your cart yet. Explore our
-                collections to find your perfect attire.
+                {isLoggedIn
+                  ? "You haven't added any royal pieces to your cart yet. Explore our collections to find your perfect attire."
+                  : ""}
               </p>
-              <Link to="/product">
+              <Link to={!isLoggedIn ? "/login" : "/collection"}>
                 <button className="mt-10 bg-primary text-black px-10 py-4 rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/20">
-                  Explore Collection
+                  {isLoggedIn ? "Explore Collection" : "Login to Continue"}
                 </button>
               </Link>
             </div>
