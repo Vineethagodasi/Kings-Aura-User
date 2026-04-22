@@ -14,6 +14,7 @@ import {
   removeWishlistItem,
 } from "../../redux/wishlist/wishlistSlice";
 import { showSuccess, showError } from "../../utils/toast";
+import ProtectedButton from "../../components/ProtectedButton";
 
 function Wishlist() {
   const [activeImages, setActiveImages] = useState({});
@@ -182,16 +183,15 @@ const handleDelete = async (id) => {
                   </div>
 
                   {/* Add to Cart Button */}
-                  <button
-                    className="mt-5 w-full border border-primaryDark text-md rounded-lg py-3 
-                               flex items-center justify-center gap-2
-                               text-primaryDark font-medium
-                               transition-all duration-300
-                               hover:bg-primary hover:text-black"
+                  <ProtectedButton
+                    onClick={() => handleAddToCart(item)}
+                    disabled={item.availability === "Out of Stock"}
+                    className=""
+                    addCartCss={true}
                   >
                     <img src={cart} className="w-7 h-7" alt="cart" />
                     Add to Cart
-                  </button>
+                  </ProtectedButton>
                 </div>
               );
             })}

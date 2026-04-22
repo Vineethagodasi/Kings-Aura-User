@@ -3,7 +3,7 @@
 import { useNavigate } from "react-router-dom";
 import { showError } from "../utils/toast";
 
-function ProtectedButton({ onClick, children, classNames, addCartCss }) {
+function ProtectedButton({ onClick, children, classNames, addCartCss, disabled }) {
   const navigate = useNavigate();
 
   const buttonCss = `mt-5 w-full border border-primaryDark text-md rounded-lg py-3 
@@ -29,7 +29,8 @@ function ProtectedButton({ onClick, children, classNames, addCartCss }) {
   return (
     <button
       onClick={handleClick}
-      className={`${addCartCss ? buttonCss : classNames}`}
+      className={`${addCartCss ? buttonCss : classNames} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      disabled={disabled}
     >
       {children}
     </button>

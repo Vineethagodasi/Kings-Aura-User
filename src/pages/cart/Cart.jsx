@@ -23,11 +23,6 @@ function Cart() {
   const { items: cartItems, loading } = useSelector((state) => state.cart);
   const { isLoggedIn } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(fetchCart());
-    }
-  }, [dispatch]);
 
   const handleUpdate = async (id, qty) => {
     if (qty < 1) {

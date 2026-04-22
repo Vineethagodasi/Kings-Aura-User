@@ -230,6 +230,7 @@ function FeaturedProducts() {
                   {/* Button */}
                   <ProtectedButton
                     onClick={() => handleAddToCart(item)}
+                    disabled={item.availability === "Out of Stock"}
                     className=""
                     addCartCss={true}
                   >

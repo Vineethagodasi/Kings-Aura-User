@@ -284,19 +284,26 @@ function ProductDetails() {
             </div>
 
             {/* ================= BUTTONS ================= */}
-            <div className="mt-8 flex flex-col max-w-[360px] gap-3">
+            <div className="mt-8 flex flex-wrap items-center justify-between max-w-[460px] gap-3">
               {/* Add to Cart */}
-              <button className="bg-[#C8A96A] text-black py-3 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary transition-all shadow-md">
+              <button className="bg-[#C8A96A] text-black py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary transition-all shadow-md">
                 <img src={cart} className="w-7 h-7" alt="cart" />
                 Add to Royal Cart
               </button>
 
               {/* Wishlist */}
-              <button className="border border-primaryDark mt-2 text-primary py-3 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary/10 transition-all">
+              <button className="border border-primaryDark text-primary py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary/10 transition-all">
                 <img src={crown} className="w-5 h-5" alt="crown" />
                 Add to Wishlist
               </button>
             </div>
+
+            {/* buy now */}
+          <div className="">
+              <button className="mt-4 bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-all shadow-md">
+              Buy Now
+            </button>
+          </div>
 
             {/* Extra Info */}
             <p className="text-base text-subheading mt-5">
@@ -440,6 +447,7 @@ function ProductDetails() {
                     {/* Button */}
                     <ProtectedButton
                       onClick={() => handleAddToCart(item)}
+                    disabled={item.availability === "Out of Stock"}
                       className=""
                       addCartCss={true}
                     >

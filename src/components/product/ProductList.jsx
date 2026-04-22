@@ -410,6 +410,9 @@ function ProductList({ collectionName = "" }) {
                       <p className="text-sm text-subheading mt-1">
                         {item.abouttheproduct || ""}
                       </p>
+                      <p className={`text-sm ${item.availability === "Out of Stock" ? "text-red-500" : ""} mt-3`}>
+                        {item.availability === "Out of Stock" ? "Out of Stock" : ""}
+                      </p>
 
                       <p className="text-primaryDark text-2xl mt-3 font-medium">
                         {getPrice(item.pricingid)}
@@ -419,6 +422,7 @@ function ProductList({ collectionName = "" }) {
                     {/* Button */}
                     <ProtectedButton
                       onClick={() => handleAddToCart(item)}
+                      disabled={item.availability === "Out of Stock"}
                       className=""
                       addCartCss={true}
                     >
