@@ -23,6 +23,9 @@ import Settings from "../pages/profile/Settings";
 import Security from "../pages/profile/Security";
 import Wishlist from "../pages/wishlist/Wishlist";
 import Product from "../pages/product/Product";
+import OrderSuccess from "../pages/OrderSuccess";
+import Orderdetails from "../pages/profile/Orderdetails";
+import TrackOrder from "../pages/profile/TrackOrder";
 
 function AppRoutes() {
   return (
@@ -46,12 +49,15 @@ function AppRoutes() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/payment" element={<Payment />} />
+          <Route path="/order-success/:id" element={<OrderSuccess />} />
+          {/* <Route path="/payment" element={<Payment />} /> */}
           
               <Route>
             <Route path="/profile" element={<Sidebar />}>
               <Route index element={<Dashboard />} />
               <Route path="orders" element={<Orders />} />
+              <Route path="orders/:id" element={<Orderdetails />} />
+              <Route path="track-order/:id" element={<TrackOrder />} />
               <Route path="address" element={<Address />} />
               <Route path="payment" element={<Payment />} />
               <Route path="settings" element={<Settings />} />

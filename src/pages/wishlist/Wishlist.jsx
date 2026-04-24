@@ -15,6 +15,7 @@ import {
 } from "../../redux/wishlist/wishlistSlice";
 import { showSuccess, showError } from "../../utils/toast";
 import ProtectedButton from "../../components/ProtectedButton";
+import { addCartItem } from "../../redux/cart/cartSlice";
 
 function Wishlist() {
   const [activeImages, setActiveImages] = useState({});
@@ -42,6 +43,23 @@ const handleDelete = async (id) => {
     showError("Failed to delete");
   }
 };
+
+
+
+
+  const handleAddToCart = async (item) => {
+    const payload = {
+      quantity: 1, // Note: your API expects 'quantity'
+      size: item.size || "M",
+      color: item.color || "Default",
+    };
+
+    dispatch(addCartItem({ id: item.productId._id, data: payload }));
+    showSuccess("Added to cart");
+  };
+
+
+
   return (
     <section
       className="min-h-screen relative flex items-center justify-center px-4 py-20 pb-32 bg-fixed bg-center bg-cover"
@@ -185,7 +203,7 @@ const handleDelete = async (id) => {
                   {/* Add to Cart Button */}
                   <ProtectedButton
                     onClick={() => handleAddToCart(item)}
-                    disabled={item.availability === "Out of Stock"}
+                    disabled={item.productId.availability === "Out of Stock"}
                     className=""
                     addCartCss={true}
                   >

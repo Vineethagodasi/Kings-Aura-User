@@ -12,11 +12,13 @@ import closeIcon from "../assets/images/close.png";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCart } from "../redux/cart/cartSlice";
+import { useLocation } from "react-router-dom";
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     // Normal scroll behavior
@@ -29,12 +31,13 @@ function Header() {
   }, []);
 
   // ✅ Pages where header should ALWAYS be white
-  const whiteHeaderRoutes = ["/product-details", "/profile"];
+  const whiteHeaderRoutes = ["/product-details", "/profile", "/order-success"];
 
   const isWhitePage =
     whiteHeaderRoutes.includes(location.pathname) ||
     location.pathname.startsWith("/profile") ||
-    location.pathname.startsWith("/product-details/");
+    location.pathname.includes("/product-details/") ||
+    location.pathname.includes("/order-success/");
 
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector((state) => state.cart);

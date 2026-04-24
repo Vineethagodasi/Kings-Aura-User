@@ -118,6 +118,21 @@ export default function AddAddress({
             />
           </div>
 
+          <input
+            type="checkbox"
+            name="isdefault"
+            id="defaultAddress"
+            checked={!!formData.isdefault}
+            onChange={handleChange}
+            className="mt-4"
+          />
+          <label
+            htmlFor="defaultAddress"
+            className="ml-2 text-sm text-gray-600"
+          >
+            Set as default address
+          </label>
+
           {/* Button */}
           <button
             onClick={handleSubmit}

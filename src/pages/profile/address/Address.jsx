@@ -49,11 +49,11 @@ export default function Address() {
   const [editData, setEditData] = useState(null);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -69,6 +69,7 @@ export default function Address() {
       city: item.shippingAddress?.city || "",
       state: item.shippingAddress?.state || "",
       pincode: item.shippingAddress?.pincode || "",
+      isdefault: item.isdefault || false,
     });
 
     setShowModal(true);
@@ -102,6 +103,7 @@ export default function Address() {
           city: "",
           state: "",
           pincode: "",
+          isdefault: false,
         });
 
         fetchAddresses();
@@ -135,6 +137,14 @@ export default function Address() {
     }
   };
 
+  const handleDefaultChange = async (item) => {
+    const res = await updateAddress(item._id, { isdefault: !item.isdefault });
+    if (res?.data?.success) {
+      showSuccess("Default address updated");
+      fetchAddresses();
+    }
+  };
+
   return (
     <div className="w-full md:p-6 rounded-3xl">
       {/* Header */}
@@ -150,6 +160,7 @@ export default function Address() {
           onClick={() => {
             setEditData(null); // 🔥 reset edit mode
             setFormData({
+              isdefault: false,
               placeType: "",
               fullname: "",
               mobilenumber: "",
@@ -177,12 +188,15 @@ export default function Address() {
           >
             {/* Top */}
             <div className="flex justify-between items-center mb-3">
-              {item.isDefault ? (
+              {item.isdefault ? (
                 <span className="border border-primary text-primary text-sm px-4 py-1 rounded-lg">
                   Default Address
                 </span>
               ) : (
-                <span className="text-gray-500 text-sm cursor-pointer">
+                <span
+                  className="text-gray-500 border px-2 py-1 rounded text-sm cursor-pointer"
+                  onClick={() => handleDefaultChange(item)}
+                >
                   Set as Default
                 </span>
               )}
@@ -286,7 +300,6 @@ export default function Address() {
           </div>
         </div>
       )}
-      
     </div>
   );
 }

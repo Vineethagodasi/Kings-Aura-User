@@ -5,7 +5,7 @@ import crown2 from "../../assets/images/productDetails/crown.png";
 import cart from "../../assets/images/addcart.png";
 import exploreImg from "../../assets/images/exploreBtn.png";
 import { motion } from "framer-motion";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProductById } from "../../constants/product";
 import { addCartItem } from "../../redux/cart/cartSlice";
 import {
@@ -28,6 +28,7 @@ function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -63,7 +64,7 @@ function ProductDetails() {
 
   const handleAddToCart = async (item) => {
     const payload = {
-      quantity: 1, // Note: your API expects 'quantity'
+      quantity: 1,
       size: item.pricingid?.[0]?.size || "M",
       color: item.pricingid?.[0]?.color || "Default",
     };
@@ -78,7 +79,6 @@ function ProductDetails() {
     );
 
     if (existingItem) {
-      // 🔴 REMOVE
       dispatch(removeWishlistItem(existingItem._id));
 
       try {
@@ -89,7 +89,6 @@ function ProductDetails() {
         showError("Failed to remove");
       }
     } else {
-      // 🟢 ADD
       const payload = {
         productid: item._id,
         size: item.pricingid?.[0]?.size || "M",
@@ -140,6 +139,30 @@ function ProductDetails() {
     return minPrice === maxPrice
       ? `₹${minPrice}`
       : `₹${minPrice} - ₹${maxPrice}`;
+  };
+
+  // 🔥 Handle Buy Now - Pass complete product data
+  const handleBuyNow = () => {
+    navigate("/checkout", {
+      state: {
+        isBuyNow: true,
+        product: {
+          productId: product._id,
+          productname: product.productname,
+          size: selectedSize,
+          color: selectedColor,
+          quantity: 1,
+          // ✅ Pass additional data for display in checkout
+          price: selectedVariant?.productprice || 0,
+          taxPercentage: product.taxpercentage || 5,
+          shippingCost: product.shippingcost || 0,
+          images: product.imagesUrl || [],
+          productDetails: {
+            productname: product.productname,
+          },
+        },
+      },
+    });
   };
 
   return (
@@ -286,24 +309,43 @@ function ProductDetails() {
             {/* ================= BUTTONS ================= */}
             <div className="mt-8 flex flex-wrap items-center justify-between max-w-[460px] gap-3">
               {/* Add to Cart */}
-              <button className="bg-[#C8A96A] text-black py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary transition-all shadow-md">
-                <img src={cart} className="w-7 h-7" alt="cart" />
-                Add to Royal Cart
-              </button>
+              <ProtectedButton onClick={() => handleAddToCart(product)}>
+                <div className="bg-[#C8A96A] text-black py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary transition-all shadow-md">
+                  <img src={cart} className="w-7 h-7" alt="cart" />
+                  Add to Royal Cart
+                </div>
+              </ProtectedButton>
 
               {/* Wishlist */}
-              <button className="border border-primaryDark text-primary py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary/10 transition-all">
-                <img src={crown} className="w-5 h-5" alt="crown" />
-                Add to Wishlist
-              </button>
+              <ProtectedButton onClick={() => handleWishlistToggle(product)}>
+                <div className="border border-primaryDark text-primary py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary/10 transition-all">
+                  <img src={crown} className="w-5 h-5" alt="crown" />
+                  Add to Wishlist
+                </div>
+              </ProtectedButton>
             </div>
 
-            {/* buy now */}
-          <div className="">
-              <button className="mt-4 bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-all shadow-md">
-              Buy Now
-            </button>
-          </div>
+            {/* Buy Now Button - Updated */}
+            <div className="mt-4">
+              <ProtectedButton onClick={handleBuyNow}>
+                <div className="bg-primary text-white py-3 px-8 rounded-lg font-medium hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                  Buy Now
+                </div>
+              </ProtectedButton>
+            </div>
 
             {/* Extra Info */}
             <p className="text-base text-subheading mt-5">
@@ -447,7 +489,7 @@ function ProductDetails() {
                     {/* Button */}
                     <ProtectedButton
                       onClick={() => handleAddToCart(item)}
-                    disabled={item.availability === "Out of Stock"}
+                      disabled={item.availability === "Out of Stock"}
                       className=""
                       addCartCss={true}
                     >
