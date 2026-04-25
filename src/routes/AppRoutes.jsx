@@ -1,5 +1,3 @@
-
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Layout from "../components/Layout";
@@ -26,22 +24,29 @@ import Product from "../pages/product/Product";
 import OrderSuccess from "../pages/OrderSuccess";
 import Orderdetails from "../pages/profile/Orderdetails";
 import TrackOrder from "../pages/profile/TrackOrder";
+import Notifications from "../pages/profile/Notification";
+import About from "../pages/About";
+import Contact from "../pages/Contact";
+import FAQ from "../pages/Faq";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
-     <ScrollToTop />
+      <ScrollToTop />
       <Routes>
         <Route path="/signup" element={<Signup />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/verify" element={<Verify />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                {/* <Route path="/profile" element={<UserProfile />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/verify" element={<Verify />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        {/* <Route path="/profile" element={<UserProfile />} /> */}
 
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/collection" element={<Collection />} /> 
+          <Route path="/collection" element={<Collection />} />
           <Route path="/collection/:name" element={<CollectionDetails />} />
           <Route path="/product" element={<Product />} />
           <Route path="/product-details/:id" element={<ProductDetails />} />
@@ -51,15 +56,15 @@ function AppRoutes() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success/:id" element={<OrderSuccess />} />
           {/* <Route path="/payment" element={<Payment />} /> */}
-          
-              <Route>
+
+          <Route>
             <Route path="/profile" element={<Sidebar />}>
               <Route index element={<Dashboard />} />
               <Route path="orders" element={<Orders />} />
               <Route path="orders/:id" element={<Orderdetails />} />
               <Route path="track-order/:id" element={<TrackOrder />} />
               <Route path="address" element={<Address />} />
-              <Route path="payment" element={<Payment />} />
+              <Route path="notifications" element={<Notifications />} />
               <Route path="settings" element={<Settings />} />
               <Route path="security" element={<Security />} />
             </Route>

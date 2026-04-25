@@ -3,6 +3,7 @@ import rightImg from "../assets/images/palace.png";
 import exploreIcon from "../assets/images/exploreBtn.png";
 import leftBg from "../assets/images/palacebg.jpg";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function PalaceSection() {
   return (
@@ -57,9 +58,11 @@ function PalaceSection() {
               </button>
 
               {/* Secondary Button */}
+             <Link to="/collection">
               <button className="border border-primary text-primary px-6 py-3 rounded-xl font-medium hover:bg-primary/10 transition">
                 Explore Store
               </button>
+             </Link>
 
             </div>
           </motion.div>

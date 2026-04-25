@@ -12,6 +12,9 @@ export default function Orders() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [filter, setFilter] = useState("all");
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -46,25 +49,28 @@ export default function Orders() {
     setPage(1); // reset to first page
   };
 
-  const cancelOrder = async (id) => {
+  const openCancelModal = (id) => {
+    setSelectedOrderId(id);
+    setShowCancelModal(true);
+  };
+
+  const handleCancelOrder = async () => {
     try {
-      const confirmCancel = window.confirm(
-        "Are you sure you want to cancel this order?",
+      setCancelLoading(true);
+
+      const res = await axiosInstance.put(
+        `/user/order/cancel/${selectedOrderId}`,
       );
 
-      if (!confirmCancel) return;
-
-      const res = await axiosInstance.put(`/user/order/cancel/${id}`);
-
       if (res.data?.success) {
-        // success message
         showSuccess(res.data.message);
-
-        // 🔥 refresh orders list
-        fetchOrders();
+        setShowCancelModal(false);
+        fetchOrders(); // refresh
       }
     } catch (err) {
       showError(err.response?.data?.message || "Failed to cancel order");
+    } finally {
+      setCancelLoading(false);
     }
   };
 
@@ -187,7 +193,9 @@ export default function Orders() {
                     {/* Buttons */}
                     <div className="flex flex-col sm:flex-row flex-wrap gap-2 md:gap-4 mt-3 md:mt-4">
                       <button
-                        onClick={() => navigate(`/profile/track-order/${order._id}`)}
+                        onClick={() =>
+                          navigate(`/profile/track-order/${order._id}`)
+                        }
                         className="bg-primary text-white px-4 md:px-5 py-2 rounded-full text-xs md:text-sm w-full sm:w-auto"
                       >
                         Track Order
@@ -205,14 +213,15 @@ export default function Orders() {
                           order.status === "delivered" ||
                           order.status === "cancelled"
                         }
-                        onClick={() => cancelOrder(order._id)}
+                        onClick={() => openCancelModal(order._id)}
                         className={`px-4 md:px-5 py-2 rounded-full text-xs md:text-sm w-full sm:w-auto border
-    ${
-      order.status === "delivered" || order.status === "cancelled"
-        ? "border-gray-300 text-gray-400 cursor-not-allowed"
-        : "border-red-500 text-red-500"
-    }
-  `}
+                        ${
+                          order.status === "delivered" ||
+                          order.status === "cancelled"
+                            ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                            : "border-red-500 text-red-500"
+                        }
+                      `}
                       >
                         Cancel Order
                       </button>
@@ -266,6 +275,46 @@ export default function Orders() {
           Next
         </button>
       </div>
+
+      {showCancelModal && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+          onClick={() => setShowCancelModal(false)}
+        >
+          <div
+            className="bg-white w-[90%] md:w-[520px] space-y-6 rounded-3xl p-8 text-center shadow-xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Title */}
+            <h2 className="text-2xl font-semibold text-heading mb-2">
+              Cancel Order
+            </h2>
+
+            {/* Message */}
+            <p className="text-subheading text-base mb-6 leading-relaxed">
+              Are you sure you want to cancel this order?
+            </p>
+
+            {/* Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCancelModal(false)}
+                className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-xl hover:bg-gray-100 transition"
+              >
+                No
+              </button>
+
+              <button
+                onClick={handleCancelOrder}
+                disabled={cancelLoading}
+                className="flex-1 bg-primary text-white py-2.5 rounded-xl hover:bg-red-600 transition disabled:opacity-50"
+              >
+                {cancelLoading ? "Cancelling..." : "Yes, Cancel"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

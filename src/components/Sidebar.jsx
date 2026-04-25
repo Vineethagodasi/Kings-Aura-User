@@ -27,7 +27,6 @@ function Sidebar({ open, setOpen }) {
   const menuItems = [
     { name: "HOME", icon: homeIcon, path: "/" },
     { name: "COLLECTIONS", icon: collectionsIcon, path: "/collection" },
-    { name: "THE ROYAL WARDROBE", icon: wardrobeIcon, path: "/wardrobe" },
     { name: "ABOUT", icon: aboutIcon, path: "/about" },
     { name: "CONTACT", icon: contactIcon, path: "/contact" },
   ];
@@ -78,7 +77,7 @@ function Sidebar({ open, setOpen }) {
 
   useEffect(() => {
     setOpen(false); // Close sidebar on route change
-  }, [location.pathname]);
+  }, [location.pathname, showLogoutModal]);
 
   return (
     <>
@@ -133,11 +132,13 @@ function Sidebar({ open, setOpen }) {
 
             {/* Bottom Links */}
             <div className="mt-6 space-y-4 text-white/80">
+          <Link to="/profile/orders">
               <div className="flex items-center gap-3">
                 <img src={trackOrderIcon} className="w-5 h-5 opacity-80" />
                 <p>Track Order</p>
               </div>
 
+          </Link>
               <Link to="/profile" className="w-full block">
                 <div className="flex items-center gap-3">
                   <img src={accountIcon} className="w-5 h-5 opacity-80" />
@@ -205,7 +206,7 @@ function Sidebar({ open, setOpen }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             easing="easeInOut"
-            className="fixed inset-0 bg-black/20 z-[999] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/40 z-[999] flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.7, y: 20 }}
@@ -214,23 +215,23 @@ function Sidebar({ open, setOpen }) {
               transition={{ duration: 0.3 }}
               className="w-full max-w-md"
             >
-              <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 md:p-8 shadow-2xl">
+              <div className="backdrop-blur-xl bg-white border border-white/20 rounded-2xl p-6 md:p-8 shadow-2xl">
                 {/* Decorative Line */}
                 <div className="flex items-center gap-4 mb-6 justify-center">
-                  <div className="h-[2px] w-12 bg-white/60"></div>
-                  <span className="text-white/70 text-xs tracking-[0.3em]">
+                  <div className="h-[2px] w-12 bg-black"></div>
+                  <span className="text-black/70 text-xs tracking-[0.3em]">
                     ⚠
                   </span>
-                  <div className="h-[2px] w-12 bg-white/60"></div>
+                  <div className="h-[2px] w-12 bg-black"></div>
                 </div>
 
                 {/* Heading */}
-                <h2 className="text-center font-cinzel text-2xl md:text-3xl text-white mb-2">
+                <h2 className="text-center font-cinzel text-2xl md:text-3xl text-black mb-2">
                   CONFIRM LOGOUT
                 </h2>
 
                 {/* Message */}
-                <p className="text-center text-white/70 text-sm md:text-base mb-8">
+                <p className="text-center text-black/70 text-sm md:text-base mb-8">
                   Are you sure you want to logout? You'll need to sign in again
                   to access your account.
                 </p>
@@ -241,7 +242,7 @@ function Sidebar({ open, setOpen }) {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setShowLogoutModal(false)}
-                    className="flex-1 bg-white/10 border border-white/30 text-white py-3 rounded-xl hover:bg-white/20 transition font-medium"
+                    className="flex-1 bg-gray-200 border border-gray-300 text-black py-3 rounded-xl hover:bg-gray-300 transition font-medium"
                   >
                     Cancel
                   </motion.button>

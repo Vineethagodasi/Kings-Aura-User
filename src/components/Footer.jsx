@@ -4,7 +4,7 @@ import footerImg from "../assets/images/footerImg.jpg";
 import { FaInstagram, FaTwitter, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import knifeImg from "../assets/images/knife.png";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Footer() {
   const location = useLocation();
@@ -24,8 +24,43 @@ function Footer() {
     "/product-details",
   ];
 
-    const isNoSpace = noSpace.includes(location.pathname) || noSpace.some(path => location.pathname.startsWith(path));
+  const isNoSpace =
+    noSpace.includes(location.pathname) ||
+    noSpace.some((path) => location.pathname.startsWith(path));
 
+  const footerLinks = [
+    {
+      title: "SHOP",
+      links: [
+        { name: "New Arrivals", path: "/collection/new-arrivals" },
+        { name: "Best Sellers", path: "/collection/best-sellers" },
+        { name: "Royal Wear", path: "/collection/royal-wear" },
+      ],
+    },
+    {
+      title: "COLLECTIONS",
+      links: [
+        { name: "Heritage", path: "/collection/heritage" },
+        { name: "Evening Wear", path: "/collection/evening-wear" },
+        { name: "Classic", path: "/collection/classic" },
+      ],
+    },
+    {
+      title: "ABOUT",
+      links: [
+        { name: "Our Story", path: "/about#story" },
+        { name: "Craftsmanship", path: "/about#craft" },
+      ],
+    },
+    {
+      title: "SUPPORT",
+      links: [
+        { name: "Contact Us", path: "/contact" },
+        { name: "FAQ", path: "/faq" },
+        { name: "Track Order", path: "/profile/orders" },
+      ],
+    },
+  ];
 
   return (
     <footer className={`pt-16 mb-[0.7px] ${isNoSpace ? "-mt-24" : ""}`}>
@@ -76,43 +111,27 @@ function Footer() {
                   transition={{ ...knifeAnimation.transition, delay: 0.4 }}
                 />
               </div>
-              <div>
-                <h4 className="font-normal text-[16px] mb-4">SHOP</h4>
-                <ul className="space-y-2 text-white/70">
-                  <li>New Arrivals</li>
-                  <li>Best Sellers</li>
-                  <li>Royal Wear</li>
-                </ul>
-              </div>
 
-              {/* Collections */}
-              <div>
-                <h4 className="font-normal text-[16px] mb-4">COLLECTIONS</h4>
-                <ul className="space-y-2 text-white/70">
-                  <li>Heritage</li>
-                  <li>Evening Wear</li>
-                  <li>Classic</li>
-                </ul>
-              </div>
+{footerLinks.map((section, index) => (
+  <div key={index}>
+    <h4 className="font-normal text-[16px] mb-4">
+      {section.title}
+    </h4>
 
-              {/* About */}
-              <div>
-                <h4 className="font-normal text-[16px] mb-4">ABOUT</h4>
-                <ul className="space-y-2 text-white/70">
-                  <li>Our Story</li>
-                  <li>Craftsmanship</li>
-                </ul>
-              </div>
-
-              {/* Support */}
-              <div>
-                <h4 className="font-normal text-[16px] mb-4">SUPPORT</h4>
-                <ul className="space-y-2 text-white/70">
-                  <li>Contact</li>
-                  <li>FAQ</li>
-                  <li>Track Order</li>
-                </ul>
-              </div>
+    <ul className="space-y-2 text-white/70">
+      {section.links.map((link, i) => (
+        <li key={i}>
+          <Link
+            to={link.path}
+            className="hover:text-white transition"
+          >
+            {link.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+))}
             </div>
 
             {/* Divider */}

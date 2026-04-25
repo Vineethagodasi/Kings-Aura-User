@@ -37,7 +37,8 @@ function Header() {
     whiteHeaderRoutes.includes(location.pathname) ||
     location.pathname.startsWith("/profile") ||
     location.pathname.includes("/product-details/") ||
-    location.pathname.includes("/order-success/");
+    location.pathname.includes("/order-success/") ||
+    location.pathname.includes("/faq");
 
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector((state) => state.cart);
@@ -67,7 +68,7 @@ function Header() {
       >
         <div className="md:container-main">
           <div
-            className={`flex items-center justify-between transition-colors duration-300 ${
+            className={`flex items-center justify-between h-[100px] transition-colors duration-300 ${
               isWhitePage || scrolled ? "text-black" : "text-white"
             }`}
           >

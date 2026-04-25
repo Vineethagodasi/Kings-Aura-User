@@ -17,6 +17,7 @@ import {
 import { showError, showSuccess } from "../../utils/toast";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedButton from "../../components/ProtectedButton";
+import ProductReviews from "./ProductReviews";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -413,9 +414,13 @@ function ProductDetails() {
                 </ul>
               </div>
             </div>
+
           </div>
         </div>
       </section>
+
+                  <ProductReviews productId={product._id} />
+
 
       {/* ================= RELATED PRODUCTS ================= */}
       {relatedProducts.length > 0 && (

@@ -29,3 +29,19 @@ export const getRandomProducts = () => {
 export const getFilterNames = () => {
   return axiosInstance.get("/products/getfilternames");
 };
+
+export const postReview = (id, formData) => {
+  return axiosInstance.post(`/products/review/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const getReviewsByProduct = (id) => {
+  return axiosInstance.get(`/products/reviews/all/${id}`);
+};
+
+export const getRandomReviews = () => {
+  return axiosInstance.get("/products/reviews/random");
+};
