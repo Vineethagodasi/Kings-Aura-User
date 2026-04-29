@@ -59,23 +59,23 @@ export default function Settings() {
         showSuccess(res.data.message || "Profile updated successfully");
       }
 
-      setFormData({
-        fullname: "",
-        email: "",
-        phone: "",
-        gender: "",
-      });
-
     } catch (error) {
       showError(error?.response?.data?.message || "Something went wrong");
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
   if (user) {
     setPreferences({
       email: user.emailnotifications ?? false,
       orders: user.orderupdates ?? false,
+    });
+
+    setFormData({
+      fullname: user.fullname || "",
+      email: user.email || "",
+      phone: user.phone || "",
+      gender: user.gender || "",
     });
   }
 }, [user]);

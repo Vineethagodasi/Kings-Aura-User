@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import arrow from "../../assets/images/collection/arrow.png";
 import crown from "../../assets/images/crown.png";
 import crown2 from "../../assets/images/productDetails/crown.png";
+import primaryArrowIcon from "../../assets/images/productDetails/primaryArrow.png"
+import arrowIcon from "../../assets/images/productDetails/arrow.png"
+
 import cart from "../../assets/images/addcart.png";
 import exploreImg from "../../assets/images/exploreBtn.png";
 import { motion } from "framer-motion";
@@ -172,15 +175,30 @@ function ProductDetails() {
         <div className="container-main grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* ================= LEFT IMAGE SECTION ================= */}
           <div className="flex flex-col items-center">
-            {/* Main Image - Fixed Size Container to prevent jumping */}
-            <div className="w-full max-w-[450px] aspect-square border border-primary rounded-xl flex items-center justify-center bg-white overflow-hidden p-6 shadow-sm">
-              <img
-                key={activeImage}
-                src={product.imagesUrl[activeImage] || cart}
-                alt={product.productname}
-                className="w-full h-full object-contain transition-all duration-300"
-              />
-            </div>
+<div className="relative w-full max-w-[450px] aspect-square border border-primary rounded-xl flex items-center justify-center bg-white overflow-hidden p-6 pb-12 shadow-sm">
+
+  {/* Main Image */}
+  <img
+    key={activeImage}
+    src={product.imagesUrl[activeImage] || cart}
+    alt={product.productname}
+    className="w-full h-full object-contain transition-all duration-300"
+  />
+
+  {/* 🔥 Arrows INSIDE image */}
+  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-3">
+    {product.imagesUrl.map((_, index) => (
+      <img
+        key={index}
+        src={activeImage === index ? primaryArrowIcon : arrowIcon}
+        alt="arrow"
+        className="w-6 h-6 md:w-7 md:h-7 cursor-pointer transition-all duration-300"
+        onClick={() => setActiveImage(index)}
+      />
+    ))}
+  </div>
+
+</div>
 
             {/* Thumbnails */}
             <div className="flex flex-wrap gap-4 mt-6 justify-center">
@@ -414,13 +432,11 @@ function ProductDetails() {
                 </ul>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
-                  <ProductReviews productId={product._id} />
-
+      <ProductReviews productId={product._id} />
 
       {/* ================= RELATED PRODUCTS ================= */}
       {relatedProducts.length > 0 && (

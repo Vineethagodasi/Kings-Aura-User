@@ -5,8 +5,66 @@ import exploreImg from "../assets/images/exploreBtn.png";
 import { Link } from "react-router-dom";
 import { useCollections } from "../hooks/useCollections";
 
+/* Reusable card component */
+function CollectionCard({ item, className = "", delay = 0 }) {
+  return (
+    <Link to={`/collection/${item.collection_name}`} className={className}>
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut", delay }}
+        viewport={{ once: false }}
+        className="group relative w-full h-full rounded-xl overflow-hidden cursor-pointer"
+      >
+        {/* Image */}
+        <img
+          src={item.image || royalImg}
+          alt={item.collection_name}
+          className="w-full h-full object-contain 
+                     transition-transform duration-500 
+                     group-hover:scale-105"
+        />
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/30"></div>
+
+        {/* Bottom Gradient Overlay */}
+        <div
+          className="absolute bottom-0 left-0 w-full h-40 
+                     bg-gradient-to-t from-black/90 to-transparent
+                     opacity-70 group-hover:opacity-100
+                     transition-all duration-500"
+        ></div>
+
+        {/* Content */}
+        <div className="absolute bottom-6 left-6 text-left text-white z-10">
+          {/* Animated Border */}
+          <div
+            className="mt-2 h-[2px] bg-primary 
+                       w-10 transition-all duration-300 
+                       group-hover:w-24"
+          ></div>
+
+          {/* Title */}
+          <h3
+            className="font-cinzel text-lg md:text-xl font-medium tracking-wide 
+                       transition-all duration-500 
+                       group-hover:text-primary"
+          >
+            {item.collection_name}
+          </h3>
+
+          {/* Description */}
+          <p className="text-xs text-white/70 mt-2">
+            {item.collection_statement}
+          </p>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}
+
 export default function RoyalCollection() {
-  
   const { collections, loading } = useCollections(3);
 
   return (
@@ -34,86 +92,52 @@ export default function RoyalCollection() {
         </motion.p>
 
         {loading ? (
-          /* Skeleton Loader to prevent layout shift */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((_, index) => (
-              <div 
-                key={index} 
-                className="h-[500px] bg-gray-300/30 animate-pulse rounded-xl"
-              />
-            ))}
+          /* Skeleton Loader – matches the asymmetric layout */
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="h-[520px] bg-gray-300/30 animate-pulse rounded-xl" />
+            <div className="flex flex-col gap-6">
+              <div className="h-[248px] bg-gray-300/30 animate-pulse rounded-xl" />
+              <div className="h-[248px] bg-gray-300/30 animate-pulse rounded-xl" />
+            </div>
           </div>
         ) : (
-          /* Cards */
+          /* Cards – Asymmetric grid: 1 tall left, 2 stacked right */
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
             initial={{ opacity: 0, y: 80 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              ease: "easeOut",
-            }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: false }}
           >
-            {collections.map((item, index) => (
-              <Link to={`/collection/${item.collection_name}`} key={index}>
-                <motion.div
-                  initial={{ opacity: 0, y: 80 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.7,
-                    ease: "easeOut",
-                  }}
-                  viewport={{ once: false }}
-                  className="group relative h-[500px] rounded-xl overflow-hidden cursor-pointer"
-                >
-                  {/* Image */}
-                  <img
-                    src={item.image || royalImg}
-                    alt={item.collection_name}
-                    className="w-full h-full object-cover 
-                             transition-transform duration-500 
-                             group-hover:scale-105"
-                  />
+            {/* Left – tall card */}
+            {collections[0] && (
+              <CollectionCard
+                item={collections[0]}
+                className="h-[520px]"
+                delay={0}
+              />
+            )}
 
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black/30"></div>
-
-                  {/* Bottom Gradient Overlay */}
-                  <div
-                    className="absolute bottom-0 left-0 w-full h-40 
-                  bg-gradient-to-t from-black/90 to-transparent
-                  opacity-70 group-hover:opacity-100
-                  transition-all duration-500"
-                  ></div>
-
-                  {/* Content */}
-                  <div className="absolute bottom-6 left-6 text-left text-white z-10">
-                    {/* Animated Border */}
-                    <div
-                      className="mt-2 h-[2px] bg-primary 
-                               w-10 transition-all duration-300 
-                               group-hover:w-24"
-                    ></div>
-
-                    {/* Title */}
-                    <h3
-                      className="font-cinzel text-lg md:text-xl font-medium tracking-wide 
-                               transition-all duration-500 
-                               group-hover:text-primary"
-                    >
-                      {item.collection_name}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-xs text-white/70 mt-2">{item.collection_statement}</p>
-                  </div>
-                </motion.div>
-              </Link>
-            ))}
+            {/* Right – two stacked cards */}
+            <div className="flex flex-col gap-6">
+              {collections[1] && (
+                <CollectionCard
+                  item={collections[1]}
+                  className="h-[248px]"
+                  delay={0.15}
+                />
+              )}
+              {collections[2] && (
+                <CollectionCard
+                  item={collections[2]}
+                  className="h-[248px]"
+                  delay={0.3}
+                />
+              )}
+            </div>
           </motion.div>
         )}
-        
+
         <Link to="/collection" className="flex justify-center">
           <button className="mt-14 bg-primary text-black px-8 py-3 rounded-xl font-medium flex items-center gap-2">
             <img src={exploreImg} alt="explore" className="w-5 h-5" />

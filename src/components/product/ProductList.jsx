@@ -8,7 +8,7 @@ import cart from "../../assets/images/addcart.png";
 import arrow from "../../assets/images/collection/arrow.png";
 import Hero from "../../components/Hero";
 import productBg from "../../assets/images/collection/productBg.png";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getFilteredProducts, getFilterNames } from "../../constants/product";
 import { useCollections } from "../../hooks/useCollections";
@@ -25,6 +25,13 @@ import {
 } from "../../redux/wishlist/wishlistSlice";
 
 function ProductList({ collectionName = "" }) {
+
+  const location = useLocation();
+
+const queryParams = new URLSearchParams(location.search);
+const searchQuery = queryParams.get("search") || "";
+
+
   const [activeImages, setActiveImages] = useState({});
 
   const { name } = useParams();
@@ -46,7 +53,18 @@ function ProductList({ collectionName = "" }) {
     fabric: "",
     minprice: "",
     maxprice: "",
+     search: searchQuery,
   });
+
+  useEffect(() => {
+  setFilters((prev) => ({
+    ...prev,
+    search: searchQuery,
+  }));
+  setPage(1);
+}, [searchQuery]);
+
+
 
   const [page, setPage] = useState(1);
   const [limit] = useState(8);
@@ -75,6 +93,8 @@ function ProductList({ collectionName = "" }) {
   useEffect(() => {
     fetchFilters();
   }, []);
+
+
 
   const fetchFilters = async () => {
     try {
@@ -303,11 +323,11 @@ function ProductList({ collectionName = "" }) {
             </select>
 
             {/* Sort By */}
-            <select className={inputStyle}>
+            {/* <select className={inputStyle}>
               <option>Sort By</option>
               <option>Low to High</option>
               <option>High to Low</option>
-            </select>
+            </select> */}
           </div>
 
           {/* Right Side Count */}
@@ -387,12 +407,12 @@ function ProductList({ collectionName = "" }) {
                                   [index]: i,
                                 }))
                               }
-                              className={`h-2.5 rounded-full transition-all duration-300
-              ${
-                (activeImages[index] || 0) === i
-                  ? "bg-primary w-4"
-                  : "bg-gray-300 w-2.5"
-              }
+          className={`h-2 rounded-full transition-all duration-300
+                            ${
+                              (activeImages[index] || 0) === i
+                                ? "bg-primary w-3"
+                                : "bg-gray-300 w-2"
+                            }
             `}
                             />
                           ))

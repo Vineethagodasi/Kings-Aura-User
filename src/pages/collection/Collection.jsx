@@ -62,85 +62,97 @@ export default function Collection() {
           </motion.div>
 
           {loading ? (
-            /* Skeleton State - Dynamically sized to preserve height */
-            <div className="flex flex-col gap-6 md:gap-16">
-              {skeletonArray.map((_, i) => (
-                <div key={i} className="bg-white/50 animate-pulse rounded-2xl h-[520px] w-full" />
-              ))}
+            /* Skeleton State – asymmetric grid */
+            <div className="flex flex-col gap-10 md:gap-16">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="h-[520px] bg-white/50 animate-pulse rounded-2xl" />
+                <div className="flex flex-col gap-6">
+                  <div className="h-[248px] bg-white/50 animate-pulse rounded-2xl" />
+                  <div className="h-[248px] bg-white/50 animate-pulse rounded-2xl" />
+                </div>
+              </div>
             </div>
           ) : (
-            /* Collection Cards */
-            <div className="flex flex-col gap-6 md:gap-16">
-              {collections.map((item, index) => {
-                const isReverse = index % 2 !== 0;
+            /* Collection Cards – Asymmetric grid: groups of 3 */
+            <div className="flex flex-col gap-10 md:gap-16">
+              {Array.from(
+                { length: Math.ceil(collections.length / 3) },
+                (_, groupIdx) => {
+                  const start = groupIdx * 3;
+                  const group = collections.slice(start, start + 3);
+                  const isReverse = groupIdx % 2 !== 0;
 
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.65, ease: "easeOut" }}
-                    viewport={{ once: false, amount: 0.1 }}
-                    className={`
-                      flex flex-col
-                      ${isReverse ? "md:flex-row-reverse" : "md:flex-row"}
-                      bg-white rounded-2xl overflow-hidden
-                    `}
-                    style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}
-                  >
-                    {/* Image Side - Responsive Height */}
-                    <div
-                      className="w-full md:w-[40%] flex-shrink-0 overflow-hidden"
-                      style={{ height: "300px", mdHeight: "420px" }} // Stable height for mobile
+                  return (
+                    <motion.div
+                      key={groupIdx}
+                      className={`grid grid-cols-1 lg:grid-cols-2 gap-6`}
+                      initial={{ opacity: 0, y: 60 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.7, ease: "easeOut" }}
+                      viewport={{ once: false, amount: 0.1 }}
                     >
-                      <img
-                        src={item.image || royalImg}
-                        alt={item.collection_name}
-                        className="w-full h-full object-cover object-top"
-                      />
-                    </div>
-
-                    {/* Content Side */}
-                    <div className="flex flex-col justify-center px-8 py-8 md:px-12 md:py-10 w-full md:w-[58%]">
-                      <h3 className="font-cinzel section-heading xl:text-[32px] font-medium opacity-80 text-heading mb-2">
-                        {item.collection_name}
-                      </h3>
-
-                      <p className="section-subheading">
-                        {item.collection_statement}
-                      </p>
-                      <span className="block w-20 h-[2px] bg-primary mb-12 mt-2"></span>
-
-                      {/* Explore Button */}
-                      <Link to={`/collection/${item.collection_name}`}>
-                        {" "}
-                        <motion.button
-                          onMouseEnter={() => setIsHover(true)}
-                          onMouseLeave={() => setIsHover(false)}
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                          className="flex items-center gap-2 self-start 
-                                  border border-primary
-                                  text-primary 
-                                  px-4 py-2
-                                  sm:px-6 sm:py-3
-                                  rounded-md 
-                                  text-base tracking-wider font-medium
-                                  transition-all duration-300
-                                  hover:bg-primary hover:text-black"
+                      {/* Tall card (left or right based on group index) */}
+                      {group[0] && (
+                        <Link
+                          to={`/collection/${group[0].collection_name}`}
+                          className={`group relative h-[520px] xl:h-[664px] rounded-2xl overflow-hidden cursor-pointer ${
+                            isReverse ? "lg:order-2" : ""
+                          }`}
                         >
                           <img
-                            src={isHover ? exploreBtnIcon : exploreColorBtn}
-                            alt="explore"
-                            className="w-4 h-4 transition-all duration-300"
+                            src={group[0].image || royalImg}
+                            alt={group[0].collection_name}
+                            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                           />
-                          Explore Collection
-                        </motion.button>
-                      </Link>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                          <div className="absolute inset-0 bg-black/30"></div>
+                          <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/90 to-transparent opacity-70 group-hover:opacity-100 transition-all duration-500"></div>
+                          <div className="absolute bottom-6 left-6 text-left text-white z-10">
+                            <div className="mt-2 h-[2px] bg-primary w-10 transition-all duration-300 group-hover:w-24"></div>
+                            <h3 className="font-cinzel text-lg md:text-xl font-medium tracking-wide transition-all duration-500 group-hover:text-primary">
+                              {group[0].collection_name}
+                            </h3>
+                            <p className="text-xs text-white/70 mt-2">
+                              {group[0].collection_statement}
+                            </p>
+                          </div>
+                        </Link>
+                      )}
+
+                      {/* Two stacked cards */}
+                      <div
+                        className={`flex flex-col gap-6 ${
+                          isReverse ? "lg:order-1" : ""
+                        }`}
+                      >
+                        {group.slice(1).map((item, idx) => (
+                          <Link
+                            to={`/collection/${item.collection_name}`}
+                            key={idx}
+                            className="group relative h-[248px] xl:h-[320px] rounded-2xl overflow-hidden cursor-pointer"
+                          >
+                            <img
+                              src={item.image || royalImg}
+                              alt={item.collection_name}
+                              className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-black/30"></div>
+                            <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/90 to-transparent opacity-70 group-hover:opacity-100 transition-all duration-500"></div>
+                            <div className="absolute bottom-6 left-6 text-left text-white z-10">
+                              <div className="mt-2 h-[2px] bg-primary w-10 transition-all duration-300 group-hover:w-24"></div>
+                              <h3 className="font-cinzel text-lg md:text-xl font-medium tracking-wide transition-all duration-500 group-hover:text-primary">
+                                {item.collection_name}
+                              </h3>
+                              <p className="text-xs text-white/70 mt-2">
+                                {item.collection_statement}
+                              </p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  );
+                }
+              )}
             </div>
           )}
 
@@ -251,7 +263,7 @@ export default function Collection() {
                     <img
                       src={item.image}
                       alt={item.collection_name}
-                      className="w-full h-full object-cover object-top 
+                      className="w-full h-full object-contain object-top 
                            transition-transform duration-700 
                            group-hover:scale-110"
                     />

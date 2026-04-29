@@ -7,7 +7,7 @@ import PalaceSection from "../components/PalaceSection";
 import RoyalCTA from "../components/RoyalCTA";
 import RoyalCollection from "../components/RoyalCollection";
 import Hero from "../components/Hero";
-import heroImg from "../assets/images/heroImg.png";
+import heroImg from "../assets/images/heroImg2.png";
 import exploreImg from "../assets/images/exploreBtn.png";
 import { useEffect, useState } from "react";
 import axiosInstance from "../services/axiosInstance";
@@ -49,6 +49,7 @@ function Home() {
           {
             text: "Enter the Kingdom",
             variant: "outline",
+            link: "/about",
           },
         ]}
 

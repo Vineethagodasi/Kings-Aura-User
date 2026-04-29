@@ -9,7 +9,7 @@ import Sidebar from "./Sidebar";
 import { easeOut, motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import closeIcon from "../assets/images/close.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCart } from "../redux/cart/cartSlice";
 import { useLocation } from "react-router-dom";
@@ -49,6 +49,16 @@ function Header() {
       dispatch(fetchCart());
     }
   }, [dispatch, isLoggedIn]);
+
+  const [searchText, setSearchText] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (!searchText.trim()) return;
+
+    navigate(`/product?search=${encodeURIComponent(searchText)}`);
+    setShowSearch(false);
+  };
 
   return (
     <>
@@ -168,21 +178,32 @@ function Header() {
 
             {/* Search Input */}
             <div className="w-full max-w-xl flex items-center gap-3 border border-primary rounded-full px-6 py-4">
-              <img src={searchImg} className="w-6 h-6" />
+              {/* <img src={searchImg} className="w-6 h-6" /> */}
+              
               <input
                 type="text"
                 autoFocus
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearch();
+                }}
                 placeholder="Search for royal wear..."
                 className="bg-transparent outline-none text-white w-full placeholder:text-white/60"
               />
+              <img
+  src={searchImg}
+  className="w-6 h-6 cursor-pointer"
+  onClick={handleSearch}
+/>
             </div>
 
             {/* Popular Searches */}
             <h3 className="text-white mt-10 font-cinzel text-xl tracking-wide">
-              POPULAR SEARCHES
+              Popular your products
             </h3>
 
-            <div className="flex flex-wrap justify-center gap-4 mt-6 max-w-2xl">
+            {/* <div className="flex flex-wrap justify-center gap-4 mt-6 max-w-2xl">
               {[
                 "Royal Linen",
                 "Silk Shirts",
@@ -196,7 +217,7 @@ function Header() {
                   {item}
                 </button>
               ))}
-            </div>
+            </div> */}
           </motion.div>
         )}
       </AnimatePresence>

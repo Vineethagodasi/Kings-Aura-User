@@ -169,7 +169,7 @@ function FeaturedProducts() {
 
                   {/* Wishlist Icon */}
                   <ProtectedButton onClick={() => handleWishlistToggle(item)}>
-                    <div className="absolute top-6 right-8 w-10 h-10 border rounded-full flex items-center justify-center">
+                    <div className="absolute top-4 right-2 w-10 h-10 border rounded-full flex items-center justify-center">
                       <img
                         src={isWishlisted ? crown2 : crown}
                         className={`w-6 h-6`}
@@ -201,11 +201,11 @@ function FeaturedProducts() {
                                 [index]: i,
                               }))
                             }
-                            className={`h-2.5 rounded-full transition-all duration-300
+                            className={`h-2 rounded-full transition-all duration-300
                             ${
                               (activeImages[index] || 0) === i
-                                ? "bg-primary w-4"
-                                : "bg-gray-300 w-2.5"
+                                ? "bg-primary w-3"
+                                : "bg-gray-300 w-2"
                             }
                           `}
                           />

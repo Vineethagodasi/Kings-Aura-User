@@ -109,7 +109,7 @@ export default function Sidebar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden  gap-2 mb-4 p-3 mt-6 rounded-2xl w-full justify-center hover:bg-gray-200 transition-colors"
+            className="lg:hidden  gap-2 mb-4 p-3 mt-12 rounded-2xl w-full justify-center transition-colors"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -124,7 +124,7 @@ export default function Sidebar() {
 
           {/* Sidebar Panel */}
           <div
-            className={`fixed lg:static left-0 top-0 h-screen lg:h-auto w-72 lg:w-full z-40 bg-white rounded-r-3xl pt-24 lg:rounded-3xl p-4 md:p-6 shadow-2xl md:pt-32 lg:pt-0 transition-transform duration-300 lg:sticky lg:top-36 lg:translate-x-0 ${
+            className={`fixed lg:static left-0 top-0 h-screen lg:h-auto w-72 lg:w-full z-40 bg-white rounded-r-3xl pt-28 lg:rounded-3xl p-4 md:p-6 shadow-2xl md:pt-32 lg:pt-0 transition-transform duration-300 lg:sticky lg:top-36 lg:translate-x-0 ${
               mobileMenuOpen
                 ? "translate-x-0"
                 : "-translate-x-full lg:translate-x-0"
