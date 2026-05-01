@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Hero from "../components/Hero";
-import contactBg from "../assets/images/contactBg.jpg";
+import Hero from "../../components/Hero";
+import contactBg from "../../assets/images/contactBg.jpg";
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
-import axiosInstance from "../services/axiosInstance";
-import { showSuccess } from "../utils/toast";
+import axiosInstance from "../../services/axiosInstance";
+import { showSuccess } from "../../utils/toast";
 
 export default function Contact() {
 

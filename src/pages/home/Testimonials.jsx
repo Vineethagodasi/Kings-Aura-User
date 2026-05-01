@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import heroImg from "../assets/images/testimonial.png";
-import crown from "../assets/images/crown.png";
-import rightArrow from "../assets/images/rightArrow.png";
-import logo from "../assets/images/logo.png";
-import knife from "../assets/images/colorKnife.png";
-import whiteKnife from "../assets/images/whiteKnife.png";
+import heroImg from "../../assets/images/testimonial.png";
+import crown from "../../assets/images/crown.png";
+import rightArrow from "../../assets/images/rightArrow.png";
+import logo from "../../assets/images/logo.png";
+import knife from "../../assets/images/colorKnife.png";
+import whiteKnife from "../../assets/images/whiteKnife.png";
 
 function Testimonials() {
   const testimonials = [

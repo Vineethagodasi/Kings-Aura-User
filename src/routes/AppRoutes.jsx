@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
+import Home from "../pages/home/Home";
 import Layout from "../components/Layout";
 import Cart from "../pages/cart/Cart";
 import ScrollToTop from "../components/ScrollToTop";
@@ -16,7 +16,7 @@ import Sidebar from "../components/profileSidebar/Sidebar";
 import Dashboard from "../pages/profile/Dashboard";
 import Orders from "../pages/profile/Orders";
 import Address from "../pages/profile/address/Address";
-import Payment from "../pages/payment";
+// import Payment from "../pages/payment";
 import Settings from "../pages/profile/Settings";
 import Security from "../pages/profile/Security";
 import Wishlist from "../pages/wishlist/Wishlist";
@@ -25,9 +25,9 @@ import OrderSuccess from "../pages/OrderSuccess";
 import Orderdetails from "../pages/profile/Orderdetails";
 import TrackOrder from "../pages/profile/TrackOrder";
 import Notifications from "../pages/profile/Notification";
-import About from "../pages/About";
-import Contact from "../pages/Contact";
-import FAQ from "../pages/Faq";
+import About from "../pages/about/About";
+import Contact from "../pages/contact/Contact";
+import FAQ from "../pages/faq/Faq";
 
 function AppRoutes() {
   return (

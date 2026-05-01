@@ -103,9 +103,13 @@ function Login() {
               </div>
 
               <div className="text-center">
-                <h4 className="text-white">for login use this email and password</h4>
-              <p className="text-primary">mail : burravenkatesh284@gmail.com</p>
-              <p className="text-primary">password : vbbvv</p>
+                <h4 className="text-white">
+                  for login use this email and password
+                </h4>
+                <p className="text-primary">
+                  mail : burravenkatesh284@gmail.com
+                </p>
+                <p className="text-primary">password : vbbvv</p>
               </div>
 
               <h2 className="text-center font-cinzel text-xl md:text-2xl text-white uppercase">
@@ -169,8 +173,20 @@ function Login() {
                     ? "Sending..."
                     : "Signing in..."
                   : isForgot
-                  ? "Send Reset Link"
-                  : "Sign In"}
+                    ? "Send Reset Link"
+                    : "Sign In"}
+              </button>
+
+              <button
+                onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/user/google`}
+                className="mt-4 w-full flex items-center justify-center gap-3 bg-white text-black py-3 rounded-xl font-medium hover:opacity-90 transition"
+              >
+                <img
+                  src="https://developers.google.com/identity/images/g-logo.png"
+                  alt="google"
+                  className="w-5 h-5"
+                />
+                Continue with Google
               </button>
 
               {isForgot && (
@@ -206,4 +222,3 @@ function Login() {
 }
 
 export default Login;
-

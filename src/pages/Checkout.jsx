@@ -10,13 +10,15 @@ import { addAddress, getAddresses, updateAddress } from "../constants/address";
 
 import AddAddress from "../pages/profile/address/AddAddress";
 import { Pencil } from "lucide-react";
-import { showSuccess } from "../utils/toast";
+import { showError, showSuccess } from "../utils/toast";
 import { useNavigate, useLocation } from "react-router-dom";
+import { div } from "framer-motion/client";
 
 function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [expandedId, setExpandedId] = useState(null);
 
   const { items: cartItems } = useSelector((state) => state.cart);
 
@@ -280,7 +282,7 @@ function Checkout() {
   // Place Order
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
-      alert("Please select address");
+      showError("Please select address")
       return;
     }
 
@@ -303,7 +305,7 @@ function Checkout() {
       console.log(err);
       setLoading(false);
     } finally {
-      if (paymentMode === "COD") {
+      if (paymentMode !== "COD") {
         setLoading(false);
       }
     }
@@ -346,12 +348,24 @@ function Checkout() {
   const total = totals.subtotal + totals.tax + totals.shipping - discount;
   if (processingPayment) {
     return (
-      <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-50">
-        <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-white text-lg font-medium">Processing Payment...</p>
+      <div className="w-full max-w-7xl mt-28 min-h-full">
+        <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-50">
+          <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-white text-lg font-medium">
+            Processing Payment...
+          </p>
+        </div>
       </div>
     );
   }
+
+  //   if (loading) {
+  //   return (
+  //     <div className="fixed inset-0 bg-black/70 flex items-center justify-center min-h-screen">
+  //       <p className="text-white text-lg">Placing your order...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <section
@@ -407,7 +421,12 @@ function Checkout() {
                 {addresses.map((item, index) => (
                   <div
                     key={item._id}
-                    onClick={() => setSelectedAddress(item._id)}
+                    onClick={() => {
+                      setSelectedAddress(item._id);
+                      setExpandedId((prev) =>
+                        prev === item._id ? null : item._id,
+                      );
+                    }}
                     className={`group relative z-0 cursor-pointer rounded-xl p-5 border transition-all duration-300 transform ${
                       selectedAddress === item._id
                         ? "border-primary bg-gradient-to-br from-primary/20 to-primary/5 shadow-lg shadow-primary/30 scale-[1.01]"
@@ -421,54 +440,43 @@ function Checkout() {
                     <div className="flex justify-between items-start gap-4">
                       {/* Address Info */}
                       <div className="flex-1">
-                        <div className="flex items-center flex-wrap gap-2 mb-2">
-                          <span className="inline-block bg-primary text-subheading text-xs px-3 py-1 rounded-md">
+                        {/* 🔹 ALWAYS VISIBLE (short) */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="bg-primary text-xs px-2 py-1 rounded">
                             {item.placeType}
                           </span>
 
-                          <p className="font-semibold text-base text-white">
+                          <p className="font-semibold text-white">
                             {item.contactinfo?.fullname}
                           </p>
+
                           {item.isdefault && (
-                            <span className="px-2 py-0.5 bg-primary/30 text-primary text-xs rounded-full border border-primary/50">
-                              Default
+                            <span className="text-xs text-primary">
+                              (Default)
                             </span>
                           )}
                         </div>
 
-                        <p className="text-white/80 text-sm leading-relaxed">
-                          {item.shippingAddress?.address}
-                        </p>
-
-                        <p className="text-white/70 text-sm mt-1">
-                          {item.shippingAddress?.city},{" "}
-                          {item.shippingAddress?.state} -{" "}
-                          {item.shippingAddress?.pincode}
-                        </p>
-
-                        <div className="flex items-center gap-4 mt-3 text-white/60 text-sm">
-                          <span className="flex items-center gap-1">
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                              />
-                            </svg>
-                            {item.contactinfo?.mobilenumber}
-                          </span>
-                        </div>
+                        {/* 🔥 EXPAND ON CLICK */}
+                        {expandedId === item._id && (
+                          <div className="mt-2 text-sm text-gray-300 space-y-1">
+                            <p>{item.shippingAddress?.address}</p>
+                            <p>
+                              {item.shippingAddress?.city},{" "}
+                              {item.shippingAddress?.state} -{" "}
+                              {item.shippingAddress?.pincode}
+                            </p>
+                            <p>{item.contactinfo?.mobilenumber}</p>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex gap-4 relative z-99 text-primary">
                         <Pencil
-                          onClick={() => handleEdit(item)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(item);
+                          }}
                           size={18}
                           className="cursor-pointer"
                         />
@@ -692,13 +700,13 @@ function Checkout() {
                 ))}
               </div>
 
-              <div className="flex gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-4">
                 <input
                   type="text"
                   placeholder="Enter coupon code"
                   value={coupon}
                   onChange={(e) => setCoupon(e.target.value)}
-                  className="flex-1 border rounded-lg px-3 py-2 text-sm"
+                  className="flex-1 w-full border rounded-lg px-3 py-2 text-sm"
                 />
 
                 <button
@@ -748,15 +756,25 @@ function Checkout() {
                 onClick={handlePlaceOrder}
                 disabled={loading}
                 className={`w-full mt-6 bg-gradient-to-r from-primary to-primary/90 text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2
-    ${loading ? "opacity-70 cursor-not-allowed" : "hover:scale-[1.02]"}
-  `}
+  ${loading ? "opacity-70 cursor-not-allowed" : "hover:scale-[1.02]"}
+`}
               >
-                <img
-                  src={exploreBtn}
-                  className="w-5 h-5 group-hover:rotate-12 transition-transform"
-                  alt=""
-                />
-                <span>{loading ? "Placing Order..." : "Place Order"}</span>
+                {loading ? (
+                  <>
+                    {/* Spinner */}
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Placing Order...</span>
+                  </>
+                ) : (
+                  <>
+                    <img
+                      src={exploreBtn}
+                      className="w-5 h-5 group-hover:rotate-12 transition-transform"
+                      alt=""
+                    />
+                    <span>Place Order</span>
+                  </>
+                )}
               </button>
 
               {/* Security Badge */}

@@ -1,9 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
-import royalImg from "../assets/images/royal.png";
-import exploreImg from "../assets/images/exploreBtn.png";
+import royalImg from "../../assets/images/royal.png";
+import exploreImg from "../../assets/images/exploreBtn.png";
 import { Link } from "react-router-dom";
-import { useCollections } from "../hooks/useCollections";
+import { useCollections } from "../../hooks/useCollections";
 
 /* Reusable card component */
 function CollectionCard({ item, className = "", delay = 0 }) {

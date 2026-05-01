@@ -22,6 +22,13 @@ import { useDispatch, useSelector } from "react-redux";
 import ProtectedButton from "../../components/ProtectedButton";
 import ProductReviews from "./ProductReviews";
 
+// Normalize size: API returns either "M" or ["M", "L"] — always get a flat string array
+const normalizeSizes = (size) => {
+  if (!size) return [];
+  if (Array.isArray(size)) return size;
+  return [size];
+};
+
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -32,6 +39,8 @@ function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [open, setOpen] = useState(true);
+
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,7 +56,7 @@ function ProductDetails() {
           // Set defaults
           if (productData.imagesUrl?.length > 0) setActiveImage(0);
           if (productData.pricingid?.length > 0) {
-            setSelectedSize(productData.pricingid[0].size);
+            setSelectedSize(normalizeSizes(productData.pricingid[0].size)[0] || "");
             setSelectedColor(productData.pricingid[0].color);
           }
         }
@@ -66,11 +75,15 @@ function ProductDetails() {
 
   const dispatch = useDispatch();
 
-  const handleAddToCart = async (item) => {
+  const handleAddToCart = async (item, useSelectedVariant = false) => {
     const payload = {
       quantity: 1,
-      size: item.pricingid?.[0]?.size || "M",
-      color: item.pricingid?.[0]?.color || "Default",
+      size: useSelectedVariant
+        ? selectedSize || normalizeSizes(item.pricingid?.[0]?.size)[0] || "M"
+        : normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
+      color: useSelectedVariant
+        ? selectedColor || item.pricingid?.[0]?.color || "Default"
+        : item.pricingid?.[0]?.color || "Default",
     };
 
     dispatch(addCartItem({ id: item._id, data: payload }));
@@ -95,8 +108,8 @@ function ProductDetails() {
     } else {
       const payload = {
         productid: item._id,
-        size: item.pricingid?.[0]?.size || "M",
-        color: item.pricingid?.[0]?.color || "Default",
+        size: selectedSize || normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
+        color: selectedColor || item.pricingid?.[0]?.color || "Default",
         productprice: 0,
       };
 
@@ -125,14 +138,35 @@ function ProductDetails() {
     );
   }
 
-  // Extract unique sizes and colors
-  const availableSizes = [...new Set(product.pricingid.map((p) => p.size))];
+  // Extract unique colors
   const availableColors = [...new Set(product.pricingid.map((p) => p.color))];
+
+  // Sizes available for the currently selected color only
+  const availableSizes = [
+    ...new Set(
+      product.pricingid
+        .filter((p) => p.color === selectedColor)
+        .flatMap((p) => normalizeSizes(p.size))
+    ),
+  ];
+
+  // When color changes, reset selectedSize to first valid size for that color
+  const handleColorChange = (color) => {
+    setSelectedColor(color);
+    const sizesForColor = [
+      ...new Set(
+        product.pricingid
+          .filter((p) => p.color === color)
+          .flatMap((p) => normalizeSizes(p.size))
+      ),
+    ];
+    setSelectedSize(sizesForColor[0] || "");
+  };
 
   // Find price for currently selected variant
   const selectedVariant =
     product.pricingid.find(
-      (p) => p.size === selectedSize && p.color === selectedColor,
+      (p) => normalizeSizes(p.size).includes(selectedSize) && p.color === selectedColor,
     ) || product.pricingid[0];
 
   const getPriceRange = (pricing) => {
@@ -250,7 +284,7 @@ function ProductDetails() {
                 )}
               </div>
               <div className="text-primaryDark md:text-2xl">★ ★ ★ ★ ★</div>
-              <span className="text-subheading text-sm">120 reviews</span>
+              {/* <span className="text-subheading text-sm">120 reviews</span> */}
             </div>
 
             {/* Tags */}
@@ -266,9 +300,12 @@ function ProductDetails() {
                   % OFF
                 </span>
               )}
-              <span className="bg-white/50 text-subheading px-2 md:px-4 py-2 text-xs md:text-sm rounded">
+              <span className={`bg-white/50 text-subheading px-2 md:px-4 py-2 text-xs md:text-sm rounded ${
+                product.availability === "In Stock" ? "text-green-500" : "text-red-500"
+              }`}>
                 {product.availability === "In Stock"
-                  ? "Delivery in 3-5 days"
+                  // ? "Delivery in 3-5 days"
+                  ? "In Stock"
                   : product.availability}
               </span>
               <span className="bg-primary text-black px-2 md:px-4 py-2 text-xs md:text-sm rounded">
@@ -310,7 +347,7 @@ function ProductDetails() {
                 {availableColors.map((color, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedColor(color)}
+                    onClick={() => handleColorChange(color)}
                     className={`px-4 py-2 border rounded-md text-sm transition-all
                       ${
                         selectedColor === color
@@ -328,7 +365,7 @@ function ProductDetails() {
             {/* ================= BUTTONS ================= */}
             <div className="mt-8 flex flex-wrap items-center justify-between max-w-[460px] gap-3">
               {/* Add to Cart */}
-              <ProtectedButton onClick={() => handleAddToCart(product)}>
+              <ProtectedButton onClick={() => handleAddToCart(product, true)} disabled={product.availability === "Out of Stock"}>
                 <div className="bg-[#C8A96A] text-black py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary transition-all shadow-md">
                   <img src={cart} className="w-7 h-7" alt="cart" />
                   Add to Royal Cart
@@ -346,7 +383,8 @@ function ProductDetails() {
 
             {/* Buy Now Button - Updated */}
             <div className="mt-4">
-              <ProtectedButton onClick={handleBuyNow}>
+              <ProtectedButton onClick={handleBuyNow} disabled={product.availability === "Out of Stock"}
+               >
                 <div className="bg-primary text-white py-3 px-8 rounded-lg font-medium hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2">
                   <svg
                     className="w-5 h-5"
@@ -367,9 +405,6 @@ function ProductDetails() {
             </div>
 
             {/* Extra Info */}
-            <p className="text-base text-subheading mt-5">
-              Free delivery above ₹999 · Easy returns
-            </p>
 
             {/* ================= ACCORDION ================= */}
             <div className="mt-10 border-b border-black/10 pb-4">
@@ -405,6 +440,21 @@ function ProductDetails() {
                         </li>
                       ),
                   )}
+
+                          {product.fabriccare.map(
+                    (detail, idx) =>
+                      detail && (
+                        <li key={idx} className="flex items-start gap-3">
+                          <img
+                            src={arrow}
+                            className="w-4 h-4 mt-1 flex-shrink-0"
+                            alt="arrow"
+                          />
+                          <span>{detail}</span>
+                        </li>
+                      ),
+                  )}
+
                   <li className="flex items-start gap-3">
                     <img
                       src={arrow}
@@ -413,6 +463,7 @@ function ProductDetails() {
                     />
                     <span>Fabric: {product.fabric_name}</span>
                   </li>
+                  
                   <li className="flex items-start gap-3">
                     <img
                       src={arrow}

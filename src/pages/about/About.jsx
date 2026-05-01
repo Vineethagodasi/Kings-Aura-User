@@ -1,13 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Hero from "../components/Hero";
+import Hero from "../../components/Hero";
 import { Crown, Sword, Castle } from "lucide-react";
-import aboutImg from "../assets/images/about/aboutImg.png";
-import closeBlackKnifes from "../assets/images/about/closeBlackKnifes.png";
-import aboutStory from "../assets/images/about/aboutStory.png";
-import aboutCraftImg from "../assets/images/about/aboutCraftImg.png";
-import founder from "../assets/images/about/founder.png";
-import palaceImg from "../assets/images/about/palaceImg.png";
+import aboutImg from "../../assets/images/about/aboutImg.png";
+import closeBlackKnifes from "../../assets/images/about/closeBlackKnifes.png";
+import aboutStory from "../../assets/images/about/aboutStory.png";
+import aboutCraftImg from "../../assets/images/about/aboutCraftImg.png";
+import founder from "../../assets/images/about/founder.png";
+import palaceImg from "../../assets/images/about/palaceImg.png";
 
 export default function About() {
   return (

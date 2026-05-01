@@ -24,13 +24,18 @@ import {
   removeWishlistItem,
 } from "../../redux/wishlist/wishlistSlice";
 
-function ProductList({ collectionName = "" }) {
+// Normalize size: API returns either "M" or ["M", "L"] — always get a flat string array
+const normalizeSizes = (size) => {
+  if (!size) return [];
+  if (Array.isArray(size)) return size;
+  return [size];
+};
 
+function ProductList({ collectionName = "" }) {
   const location = useLocation();
 
-const queryParams = new URLSearchParams(location.search);
-const searchQuery = queryParams.get("search") || "";
-
+  const queryParams = new URLSearchParams(location.search);
+  const searchQuery = queryParams.get("search") || "";
 
   const [activeImages, setActiveImages] = useState({});
 
@@ -53,18 +58,16 @@ const searchQuery = queryParams.get("search") || "";
     fabric: "",
     minprice: "",
     maxprice: "",
-     search: searchQuery,
+    search: searchQuery,
   });
 
   useEffect(() => {
-  setFilters((prev) => ({
-    ...prev,
-    search: searchQuery,
-  }));
-  setPage(1);
-}, [searchQuery]);
-
-
+    setFilters((prev) => ({
+      ...prev,
+      search: searchQuery,
+    }));
+    setPage(1);
+  }, [searchQuery]);
 
   const [page, setPage] = useState(1);
   const [limit] = useState(8);
@@ -93,8 +96,6 @@ const searchQuery = queryParams.get("search") || "";
   useEffect(() => {
     fetchFilters();
   }, []);
-
-
 
   const fetchFilters = async () => {
     try {
@@ -179,8 +180,8 @@ const searchQuery = queryParams.get("search") || "";
 
   const handleAddToCart = async (item) => {
     const payload = {
-      quantity: 1, // Note: your API expects 'quantity'
-      size: item.pricingid?.[0]?.size || "M",
+      quantity: 1,
+      size: normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
       color: item.pricingid?.[0]?.color || "Default",
     };
 
@@ -208,7 +209,7 @@ const searchQuery = queryParams.get("search") || "";
       // 🟢 ADD
       const payload = {
         productid: item._id,
-        size: item.pricingid?.[0]?.size || "M",
+        size: normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
         color: item.pricingid?.[0]?.color || "Default",
         productprice: 0,
       };
@@ -221,8 +222,6 @@ const searchQuery = queryParams.get("search") || "";
       }
     }
   };
-
-
 
   return (
     <>
@@ -407,7 +406,7 @@ const searchQuery = queryParams.get("search") || "";
                                   [index]: i,
                                 }))
                               }
-          className={`h-2 rounded-full transition-all duration-300
+                              className={`h-2 rounded-full transition-all duration-300
                             ${
                               (activeImages[index] || 0) === i
                                 ? "bg-primary w-3"
@@ -430,8 +429,12 @@ const searchQuery = queryParams.get("search") || "";
                       <p className="text-sm text-subheading mt-1">
                         {item.abouttheproduct || ""}
                       </p>
-                      <p className={`text-sm ${item.availability === "Out of Stock" ? "text-red-500" : ""} mt-3`}>
-                        {item.availability === "Out of Stock" ? "Out of Stock" : ""}
+                      <p
+                        className={`text-sm ${item.availability === "Out of Stock" ? "text-red-500" : ""} mt-3`}
+                      >
+                        {item.availability === "Out of Stock"
+                          ? "Out of Stock"
+                          : ""}
                       </p>
 
                       <p className="text-primaryDark text-2xl mt-3 font-medium">

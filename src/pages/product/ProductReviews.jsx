@@ -138,11 +138,11 @@ function ProductReviews({ productId }) {
     Write a Review
   </button>
 </div>      ) : (
-        <div className="space-y-6 grid md:grid-cols-2 lg:grid-cols-3 place-items-baseline gap-0">
+        <div className="space-y-6 grid md:grid-cols-2 lg:grid-cols-3 items-end gap-6">
           {reviews.map((item) => (
             <div
               key={item._id}
-              className="bg-white border rounded-2xl p-5 flex flex-col gap-5"
+              className="bg-white border rounded-2xl p-5 flex flex-col h-full gap-5"
             >
               {/* IMAGE */}
               {item.reviewimage && (

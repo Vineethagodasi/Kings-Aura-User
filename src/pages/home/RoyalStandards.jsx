@@ -1,9 +1,9 @@
 // RoyalStandards.jsx
 import { motion } from "framer-motion";
-import royalCrown from "../assets/images/royalCrown.png";
-import royalCotton from "../assets//images/royalCotton.png";
-import royalMedieval from "../assets/images/royalMedieval.png";
-import royalDelivery from "../assets/images/royalDelivery.png";
+import royalCrown from "../../assets/images/royalCrown.png";
+import royalCotton from "../../assets//images/royalCotton.png";
+import royalMedieval from "../../assets/images/royalMedieval.png";
+import royalDelivery from "../../assets/images/royalDelivery.png";
 
 function RoyalStandards() {
   const standards = [

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../services/axiosInstance";
 import productImg from "../assets/images/product1.png";
 import orderCrown from "../assets/images/orderCrown.png"; 
+import { useDispatch } from "react-redux";
+import { clearCart, fetchCart } from "../redux/cart/cartSlice";
 
 function OrderSuccess() {
   const { id } = useParams();
@@ -11,6 +13,9 @@ function OrderSuccess() {
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(false);
 
+    const dispatch = useDispatch();
+
+
 useEffect(() => {
   const fetchOrder = async () => {
     try {
@@ -18,7 +23,7 @@ useEffect(() => {
       const res = await axiosInstance.get(`/user/order/${id}`);
       if (res.data?.success) {
         setOrder(res.data.data);
-
+         dispatch(fetchCart());
         // trigger animation after data loads
         setTimeout(() => setShow(true), 100);
       }

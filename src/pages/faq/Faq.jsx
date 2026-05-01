@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import starIcon from '../assets/images/faq/star.png';
-import knifeIcon from '..//assets/images/faq/knife.png';
+import starIcon from '../../assets/images/faq/star.png';
+import knifeIcon from '../../assets/images/faq/knife.png';
 
 const faqData = [
   {

@@ -1,16 +1,17 @@
 // Hero.jsx
 
-import FeaturedProducts from "../components/FeaturedProducts";
-import RoyalStandards from "../components/RoyalStandards";
-import Testimonials from "../components/Testimonials";
-import PalaceSection from "../components/PalaceSection";
-import RoyalCTA from "../components/RoyalCTA";
-import RoyalCollection from "../components/RoyalCollection";
-import Hero from "../components/Hero";
-import heroImg from "../assets/images/heroImg2.png";
-import exploreImg from "../assets/images/exploreBtn.png";
+import FeaturedProducts from "./FeaturedProducts";
+import RoyalStandards from "./RoyalStandards";
+import Testimonials from "./Testimonials";
+import PalaceSection from "./PalaceSection";
+import RoyalCTA from "./RoyalCTA";
+import RoyalCollection from "./RoyalCollection";
+import Hero from "../../components/Hero";
+import heroImg from "../../assets/images/heroImg2.png";
+import exploreImg from "../../assets/images/exploreBtn.png";
 import { useEffect, useState } from "react";
-import axiosInstance from "../services/axiosInstance";
+import axiosInstance from "../../services/axiosInstance";
+import GoogleCallback from "../auth/GoogleCallback";
 
 function Home() {
 
@@ -26,15 +27,16 @@ function Home() {
   }
 };
 
-  // Fetch reviews on component mount
+  // Fetch reviews on component mountss
   useEffect(() => {
     fetchRandomReviews();
   }, []);
 
   return (
     <>
+      <GoogleCallback />
       <Hero
-        bgImage={heroImg}
+      bgImage={heroImg}
         label="THE ROYAL WARDROBE"
         line={true}
         title="DRESS LIKE A KING, RULE YOUR PRESENCE"

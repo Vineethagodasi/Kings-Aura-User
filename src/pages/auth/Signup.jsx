@@ -166,6 +166,18 @@ function Signup() {
                   {loading ? "Creating..." : "Create Account"}
                 </button>
 
+                <button
+  onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/user/google`}
+  className="mt-4 w-full flex items-center justify-center gap-3 bg-white text-black py-3 rounded-xl font-medium hover:opacity-90 transition"
+>
+  <img
+    src="https://developers.google.com/identity/images/g-logo.png"
+    alt="google"
+    className="w-5 h-5"
+  />
+  Continue with Google
+</button>
+
                 {/* Terms */}
                 <p className="text-center text-xs text-white/50 mt-4">
                   By creating an account, you agree to our Terms & Privacy

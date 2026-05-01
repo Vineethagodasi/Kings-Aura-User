@@ -1,7 +1,7 @@
 // RoyalCTA.jsx
 
-import bgImg from "../assets/images/royalBg.png"; // your background image
-import exploreIcon from "../assets/images/exploreBtn.png";
+import bgImg from "../../assets/images/royalBg.png"; // your background image
+import exploreIcon from "../../assets/images/exploreBtn.png";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 

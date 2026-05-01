@@ -1,7 +1,7 @@
-import knife from "../assets/images/knifes.png";
-import rightImg from "../assets/images/palace.png"; 
-import exploreIcon from "../assets/images/exploreBtn.png";
-import leftBg from "../assets/images/palacebg.jpg";
+import knife from "../../assets/images/knifes.png";
+import rightImg from "../../assets/images/palace.png"; 
+import exploreIcon from "../../assets/images/exploreBtn.png";
+import leftBg from "../../assets/images/palacebg.jpg";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 

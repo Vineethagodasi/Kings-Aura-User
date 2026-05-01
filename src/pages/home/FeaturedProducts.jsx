@@ -1,22 +1,29 @@
 import { motion } from "framer-motion";
-import crown from "../assets/images/crown.png";
-import crown2 from "../assets/images/productDetails/crown.png";
-import cart from "../assets/images/addcart.png";
-import knifeImg from "../assets/images/knifes.png";
-import exploreImg from "../assets/images/exploreBtn.png";
+import crown from "../../assets/images/crown.png";
+import crown2 from "../../assets/images/productDetails/crown.png";
+import cart from "../../assets/images/addcart.png";
+import knifeImg from "../../assets/images/knifes.png";
+import exploreImg from "../../assets/images/exploreBtn.png";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllProducts, getFilteredProducts } from "../constants/product";
-import ProtectedButton from "./ProtectedButton";
+import { getAllProducts, getFilteredProducts } from "../../constants/product";
+import ProtectedButton from "../../components/ProtectedButton";
 import { useDispatch, useSelector } from "react-redux";
-import { addCartItem } from "../redux/cart/cartSlice";
-import { showError, showSuccess } from "../utils/toast";
+import { addCartItem } from "../../redux/cart/cartSlice";
+import { showError, showSuccess } from "../../utils/toast";
 import {
   addToWishlist,
   deleteWishlist,
   fetchWishlist,
   removeWishlistItem,
-} from "../redux/wishlist/wishlistSlice";
+} from "../../redux/wishlist/wishlistSlice";
+
+// Normalize size: API returns either "M" or ["M", "L"] — always get a flat string array
+const normalizeSizes = (size) => {
+  if (!size) return [];
+  if (Array.isArray(size)) return size;
+  return [size];
+};
 
 function FeaturedProducts() {
   const [activeImages, setActiveImages] = useState({});
@@ -36,8 +43,8 @@ function FeaturedProducts() {
 
     const handleAddToCart = async (item) => {
     const payload = {
-      quantity: 1, // Note: your API expects 'quantity'
-      size: item.pricingid?.[0]?.size || "M",
+      quantity: 1,
+      size: normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
       color: item.pricingid?.[0]?.color || "Default",
     };
 
@@ -65,7 +72,7 @@ function FeaturedProducts() {
       // 🟢 ADD
       const payload = {
         productid: item._id,
-        size: item.pricingid?.[0]?.size || "M",
+        size: normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
         color: item.pricingid?.[0]?.color || "Default",
         productprice: 0,
       };

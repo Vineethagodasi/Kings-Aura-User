@@ -10,7 +10,7 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [filter, setFilter] = useState("all");
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
@@ -245,7 +245,8 @@ export default function Orders() {
         </div>
       )}
 
-      <div className="flex justify-center items-center gap-4 mt-8">
+      {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 mt-8">
         {/* Previous */}
         <button
           disabled={page === 1}
@@ -275,6 +276,7 @@ export default function Orders() {
           Next
         </button>
       </div>
+      )}
 
       {showCancelModal && (
         <div

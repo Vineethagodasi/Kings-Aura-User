@@ -164,6 +164,12 @@ function Footer() {
                 <span>Terms & Conditions</span>
                 <span>Privacy Policy</span>
               </div>
+              <p className="text-sm text-white/50 pt-4">
+  Designed and developed by{" "}
+  <a href="" className="text-primary hover:text-white underline">
+    TechPixe
+  </a>
+</p>
             </div>
           </div>
         </div>
