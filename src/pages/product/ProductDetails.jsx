@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import arrow from "../../assets/images/collection/arrow.png";
 import crown from "../../assets/images/crown.png";
 import crown2 from "../../assets/images/productDetails/crown.png";
-import primaryArrowIcon from "../../assets/images/productDetails/primaryArrow.png"
-import arrowIcon from "../../assets/images/productDetails/arrow.png"
-
+import primaryArrowIcon from "../../assets/images/productDetails/primaryArrow.png";
+import arrowIcon from "../../assets/images/productDetails/arrow.png";
+import productImgg from "../../assets/images/product1.png";
 import cart from "../../assets/images/addcart.png";
 import exploreImg from "../../assets/images/exploreBtn.png";
 import { motion } from "framer-motion";
@@ -39,8 +39,8 @@ function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [open, setOpen] = useState(true);
+  const [activeImages, setActiveImages] = useState({});
 
-  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,7 +56,9 @@ function ProductDetails() {
           // Set defaults
           if (productData.imagesUrl?.length > 0) setActiveImage(0);
           if (productData.pricingid?.length > 0) {
-            setSelectedSize(normalizeSizes(productData.pricingid[0].size)[0] || "");
+            setSelectedSize(
+              normalizeSizes(productData.pricingid[0].size)[0] || "",
+            );
             setSelectedColor(productData.pricingid[0].color);
           }
         }
@@ -108,7 +110,8 @@ function ProductDetails() {
     } else {
       const payload = {
         productid: item._id,
-        size: selectedSize || normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
+        size:
+          selectedSize || normalizeSizes(item.pricingid?.[0]?.size)[0] || "M",
         color: selectedColor || item.pricingid?.[0]?.color || "Default",
         productprice: 0,
       };
@@ -146,7 +149,7 @@ function ProductDetails() {
     ...new Set(
       product.pricingid
         .filter((p) => p.color === selectedColor)
-        .flatMap((p) => normalizeSizes(p.size))
+        .flatMap((p) => normalizeSizes(p.size)),
     ),
   ];
 
@@ -157,7 +160,7 @@ function ProductDetails() {
       ...new Set(
         product.pricingid
           .filter((p) => p.color === color)
-          .flatMap((p) => normalizeSizes(p.size))
+          .flatMap((p) => normalizeSizes(p.size)),
       ),
     ];
     setSelectedSize(sizesForColor[0] || "");
@@ -166,7 +169,9 @@ function ProductDetails() {
   // Find price for currently selected variant
   const selectedVariant =
     product.pricingid.find(
-      (p) => normalizeSizes(p.size).includes(selectedSize) && p.color === selectedColor,
+      (p) =>
+        normalizeSizes(p.size).includes(selectedSize) &&
+        p.color === selectedColor,
     ) || product.pricingid[0];
 
   const getPriceRange = (pricing) => {
@@ -209,30 +214,28 @@ function ProductDetails() {
         <div className="container-main grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* ================= LEFT IMAGE SECTION ================= */}
           <div className="flex flex-col items-center">
-<div className="relative w-full max-w-[450px] aspect-square border border-primary rounded-xl flex items-center justify-center bg-white overflow-hidden p-6 pb-12 shadow-sm">
+            <div className="relative w-full max-w-[450px] aspect-square border border-primary rounded-xl flex items-center justify-center bg-white overflow-hidden p-6 pb-12 shadow-sm">
+              {/* Main Image */}
+              <img
+                key={activeImage}
+                src={product.imagesUrl[activeImage] || cart}
+                alt={product.productname}
+                className="w-full h-full object-contain transition-all duration-300"
+              />
 
-  {/* Main Image */}
-  <img
-    key={activeImage}
-    src={product.imagesUrl[activeImage] || cart}
-    alt={product.productname}
-    className="w-full h-full object-contain transition-all duration-300"
-  />
-
-  {/* 🔥 Arrows INSIDE image */}
-  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-3">
-    {product.imagesUrl.map((_, index) => (
-      <img
-        key={index}
-        src={activeImage === index ? primaryArrowIcon : arrowIcon}
-        alt="arrow"
-        className="w-6 h-6 md:w-7 md:h-7 cursor-pointer transition-all duration-300"
-        onClick={() => setActiveImage(index)}
-      />
-    ))}
-  </div>
-
-</div>
+              {/* 🔥 Arrows INSIDE image */}
+              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-3">
+                {product.imagesUrl.map((_, index) => (
+                  <img
+                    key={index}
+                    src={activeImage === index ? primaryArrowIcon : arrowIcon}
+                    alt="arrow"
+                    className="w-6 h-6 md:w-7 md:h-7 cursor-pointer transition-all duration-300"
+                    onClick={() => setActiveImage(index)}
+                  />
+                ))}
+              </div>
+            </div>
 
             {/* Thumbnails */}
             <div className="flex flex-wrap gap-4 mt-6 justify-center">
@@ -300,12 +303,16 @@ function ProductDetails() {
                   % OFF
                 </span>
               )}
-              <span className={`bg-white/50 text-subheading px-2 md:px-4 py-2 text-xs md:text-sm rounded ${
-                product.availability === "In Stock" ? "text-green-500" : "text-red-500"
-              }`}>
+              <span
+                className={`bg-white/50 text-subheading px-2 md:px-4 py-2 text-xs md:text-sm rounded ${
+                  product.availability === "In Stock"
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
                 {product.availability === "In Stock"
-                  // ? "Delivery in 3-5 days"
-                  ? "In Stock"
+                  ? // ? "Delivery in 3-5 days"
+                    "In Stock"
                   : product.availability}
               </span>
               <span className="bg-primary text-black px-2 md:px-4 py-2 text-xs md:text-sm rounded">
@@ -365,7 +372,10 @@ function ProductDetails() {
             {/* ================= BUTTONS ================= */}
             <div className="mt-8 flex flex-wrap items-center justify-between max-w-[460px] gap-3">
               {/* Add to Cart */}
-              <ProtectedButton onClick={() => handleAddToCart(product, true)} disabled={product.availability === "Out of Stock"}>
+              <ProtectedButton
+                onClick={() => handleAddToCart(product, true)}
+                disabled={product.availability === "Out of Stock"}
+              >
                 <div className="bg-[#C8A96A] text-black py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-primary transition-all shadow-md">
                   <img src={cart} className="w-7 h-7" alt="cart" />
                   Add to Royal Cart
@@ -383,8 +393,10 @@ function ProductDetails() {
 
             {/* Buy Now Button - Updated */}
             <div className="mt-4">
-              <ProtectedButton onClick={handleBuyNow} disabled={product.availability === "Out of Stock"}
-               >
+              <ProtectedButton
+                onClick={handleBuyNow}
+                disabled={product.availability === "Out of Stock"}
+              >
                 <div className="bg-primary text-white py-3 px-8 rounded-lg font-medium hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2">
                   <svg
                     className="w-5 h-5"
@@ -441,7 +453,7 @@ function ProductDetails() {
                       ),
                   )}
 
-                          {product.fabriccare.map(
+                  {product.fabriccare.map(
                     (detail, idx) =>
                       detail && (
                         <li key={idx} className="flex items-start gap-3">
@@ -463,7 +475,7 @@ function ProductDetails() {
                     />
                     <span>Fabric: {product.fabric_name}</span>
                   </li>
-                  
+
                   <li className="flex items-start gap-3">
                     <img
                       src={arrow}
@@ -534,14 +546,80 @@ function ProductDetails() {
                     </ProtectedButton>
 
                     {/* Image */}
-                    <div className="overflow-hidden aspect-square flex items-center justify-center">
+
+                    {/* Image */}
+                    <div className="relative overflow-hidden">
                       <Link to={`/product-details/${item._id}`}>
-                        <img
-                          src={item.imagesUrl?.[0] || cart}
+                        {/* <img
+                                         key={activeImages[index] || 0}
+                                         src={
+                                           item.imagesUrl?.[activeImages[index] || 0] || crown
+                                         }
+                                         alt={item.productname}
+                                         className="w-full h-[180px] object-contain transition-transform duration-500 group-hover:scale-105"
+                                       /> */}
+
+                        <motion.img
+                          src={
+                            item.imagesUrl?.[activeImages[index] || 0] ||
+                            productImgg
+                          }
                           alt={item.productname}
-                          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                          className="w-full h-[180px] object-contain cursor-grab active:cursor-grabbing"
+                          drag="x"
+                          dragConstraints={{ left: 0, right: 0 }}
+                          dragElastic={0.2}
+                          onDragStart={(e) => e.stopPropagation()}
+                          onDragEnd={(e, info) => {
+                            const swipeThreshold = 30;
+
+                            if (info.offset.x < -swipeThreshold) {
+                              setActiveImages((prev) => {
+                                const current = prev[index] || 0;
+                                const next =
+                                  current < item.imagesUrl.length - 1
+                                    ? current + 1
+                                    : 0;
+                                return { ...prev, [index]: next };
+                              });
+                            } else if (info.offset.x > swipeThreshold) {
+                              setActiveImages((prev) => {
+                                const current = prev[index] || 0;
+                                const prevIndex =
+                                  current > 0
+                                    ? current - 1
+                                    : item.imagesUrl.length - 1;
+                                return { ...prev, [index]: prevIndex };
+                              });
+                            }
+                          }}
                         />
                       </Link>
+
+                      <div className="flex justify-center mt-3 gap-2">
+                        {item.imagesUrl?.length > 0 ? (
+                          item.imagesUrl.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={() =>
+                                setActiveImages((prev) => ({
+                                  ...prev,
+                                  [index]: i,
+                                }))
+                              }
+                              className={`h-2 rounded-full transition-all duration-300
+                                           ${
+                                             (activeImages[index] || 0) === i
+                                               ? "bg-primary w-3"
+                                               : "bg-gray-300 w-2"
+                                           }
+                           `}
+                            />
+                          ))
+                        ) : (
+                          <div className="h-2.5 w-2.5 rounded-full bg-gray-300"></div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Content */}

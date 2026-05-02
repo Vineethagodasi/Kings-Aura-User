@@ -32,17 +32,17 @@ function Footer() {
     {
       title: "SHOP",
       links: [
-        { name: "New Arrivals", path: "/collection/new-arrivals" },
-        { name: "Best Sellers", path: "/collection/best-sellers" },
-        { name: "Royal Wear", path: "/collection/royal-wear" },
+        { name: "Collections", path: "/collection" },
+        { name: "Products", path: "/product" },
+        { name: "Royal Wear", path: "/collection/THE%20ROYAL%20WEAR" },
       ],
     },
     {
       title: "COLLECTIONS",
       links: [
-        { name: "Heritage", path: "/collection/heritage" },
-        { name: "Evening Wear", path: "/collection/evening-wear" },
-        { name: "Classic", path: "/collection/classic" },
+        { name: "Heritage", path: "/collection/THE%20HERITAGE%20COLLECTION" },
+        { name: "Evening Regalia", path: "/collection/THE%20EVENING%20REGALIA" },
+        { name: "Urban King", path: "/collection/URBAN%20KING" },
       ],
     },
     {

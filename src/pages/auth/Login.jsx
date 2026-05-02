@@ -98,11 +98,13 @@ function Login() {
             className="w-full max-w-md mx-auto lg:ml-auto"
           >
             <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 md:p-8 shadow-2xl">
+             <Link to="/">
               <div className="flex justify-center mb-4">
                 <img src={logo} className="w-[123px]" alt="logo" />
               </div>
+             </Link>
 
-              <div className="text-center">
+              {/* <div className="text-center">
                 <h4 className="text-white">
                   for login use this email and password
                 </h4>
@@ -110,7 +112,7 @@ function Login() {
                   mail : burravenkatesh284@gmail.com
                 </p>
                 <p className="text-primary">password : vbbvv</p>
-              </div>
+              </div> */}
 
               <h2 className="text-center font-cinzel text-xl md:text-2xl text-white uppercase">
                 {isForgot ? "Reset Password" : "Welcome Back"}

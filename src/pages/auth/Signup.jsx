@@ -90,9 +90,11 @@ function Signup() {
             >
               <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 md:p-8 shadow-2xl">
                 {/* Logo */}
+               <Link to="/">
                 <div className="flex justify-center mb-4">
                   <img src={logo} className="w-[123px]" />
                 </div>
+               </Link>
 
                 {/* Heading */}
                 <h2 className="text-center font-cinzel text-xl md:text-2xl text-white">

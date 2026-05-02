@@ -46,9 +46,37 @@ export default function Sidebar() {
     }
   }, [user?.profileUrl]);
 
-  if (!isLoggedIn || !user) {
-    return <div className="my-32">Not logged in</div>;
-  }
+if (!isLoggedIn || !user) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F5F0] px-4">
+      <div className="backdrop-blur-xl bg-white/80 border border-white/30 shadow-2xl rounded-2xl p-8 max-w-md w-full text-center">
+        
+        {/* Icon */}
+<div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+  <Crown className="w-8 h-8 text-primary" strokeWidth={1.5} />
+</div>
+
+        {/* Title */}
+        <h2 className="font-cinzel text-2xl text-heading mb-2">
+          Not Logged In
+        </h2>
+
+        {/* Message */}
+        <p className="text-subheading text-sm mb-6">
+          Please login to access your profile and continue your royal journey.
+        </p>
+
+        {/* Button */}
+        <button
+          onClick={() => navigate("/login")}
+          className="bg-primary text-black px-6 py-3 rounded-xl font-medium hover:opacity-90 transition"
+        >
+          Login to Continue
+        </button>
+      </div>
+    </div>
+  );
+}
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];

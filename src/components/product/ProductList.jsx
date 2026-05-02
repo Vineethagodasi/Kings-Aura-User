@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 
 import crown from "../../assets/images/crown.png";
 import crown2 from "../../assets/images/productDetails/crown.png";
+import productImgg from "../../assets/images/product1.png"
 
 import cart from "../../assets/images/addcart.png";
 import arrow from "../../assets/images/collection/arrow.png";
@@ -385,13 +386,48 @@ function ProductList({ collectionName = "" }) {
                     {/* Image */}
                     <div className="relative overflow-hidden">
                       <Link to={`/product-details/${item._id}`}>
-                        <img
+                        {/* <img
                           key={activeImages[index] || 0}
                           src={
                             item.imagesUrl?.[activeImages[index] || 0] || crown
                           }
                           alt={item.productname}
                           className="w-full h-[180px] object-contain transition-transform duration-500 group-hover:scale-105"
+                        /> */}
+
+                        <motion.img
+                          src={
+                            item.imagesUrl?.[activeImages[index] || 0] || productImgg
+                          }
+                          alt={item.productname}
+                          className="w-full h-[180px] object-contain cursor-grab active:cursor-grabbing"
+                          drag="x"
+                          dragConstraints={{ left: 0, right: 0 }}
+                          dragElastic={0.2}
+                          onDragStart={(e) => e.stopPropagation()}
+                          onDragEnd={(e, info) => {
+                            const swipeThreshold = 30;
+
+                            if (info.offset.x < -swipeThreshold) {
+                              setActiveImages((prev) => {
+                                const current = prev[index] || 0;
+                                const next =
+                                  current < item.imagesUrl.length - 1
+                                    ? current + 1
+                                    : 0;
+                                return { ...prev, [index]: next };
+                              });
+                            } else if (info.offset.x > swipeThreshold) {
+                              setActiveImages((prev) => {
+                                const current = prev[index] || 0;
+                                const prevIndex =
+                                  current > 0
+                                    ? current - 1
+                                    : item.imagesUrl.length - 1;
+                                return { ...prev, [index]: prevIndex };
+                              });
+                            }
+                          }}
                         />
                       </Link>
 

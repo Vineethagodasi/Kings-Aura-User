@@ -346,18 +346,28 @@ function Checkout() {
   );
 
   const total = totals.subtotal + totals.tax + totals.shipping - discount;
-  if (processingPayment) {
-    return (
-      <div className="w-full max-w-7xl mt-28 min-h-full">
-        <div className="fixed inset-0 bg-black/80 flex flex-col items-center justify-center z-50">
-          <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-white text-lg font-medium">
-            Processing Payment...
-          </p>
-        </div>
+if (processingPayment) {
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
+      
+      {/* Blur layer */}
+      <div className="absolute inset-0 backdrop-blur-md"></div>
+
+      {/* Content */}
+      <div className="relative flex flex-col items-center">
+        <div className="w-14 h-14 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+
+        <p className="text-white text-lg font-medium tracking-wide">
+          Processing Payment...
+        </p>
+
+        <p className="text-white/60 text-sm mt-2">
+          Please do not refresh or go back
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   //   if (loading) {
   //   return (

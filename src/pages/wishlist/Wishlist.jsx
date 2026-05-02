@@ -6,6 +6,8 @@ import closeIcon from "../../assets/images/wishlist/close.png";
 import cart from "../../assets/images/addcart.png";
 import crown from "../../assets/images/crown.png";
 import { useState, useEffect } from "react";
+import productImgg from "../../assets/images/product1.png"
+
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,6 +18,7 @@ import {
 import { showSuccess, showError } from "../../utils/toast";
 import ProtectedButton from "../../components/ProtectedButton";
 import { addCartItem } from "../../redux/cart/cartSlice";
+import { motion } from "framer-motion";
 
 function Wishlist() {
   const [activeImages, setActiveImages] = useState({});
@@ -147,12 +150,36 @@ const handleDelete = async (id) => {
                   {/* Image */}
                   <div className="overflow-hidden">
                     <Link to={`/product-details/${product?._id}`}>
-                      <img
-                        key={activeImages[index] || 0}
-                        src={images[activeImages[index] || 0] || crown}
-                        alt={product?.productname}
-                        className="w-full h-[180px] object-contain transition-transform duration-500 group-hover:scale-105"
-                      />
+                    <motion.img
+  src={images[activeImages[index] || 0] || productImgg}
+  alt={product?.productname}
+  className="w-full h-[180px] object-contain transition-transform duration-500 group-hover:scale-105 cursor-grab active:cursor-grabbing"
+  drag="x"
+  dragConstraints={{ left: 0, right: 0 }}
+  dragElastic={0.2}
+  onDragStart={(e) => e.stopPropagation()}
+  onDragEnd={(e, info) => {
+    const swipeThreshold = 50;
+
+    if (info.offset.x < -swipeThreshold) {
+      // 👉 next
+      setActiveImages((prev) => {
+        const current = prev[index] || 0;
+        const next =
+          current < images.length - 1 ? current + 1 : 0;
+        return { ...prev, [index]: next };
+      });
+    } else if (info.offset.x > swipeThreshold) {
+      // 👈 prev
+      setActiveImages((prev) => {
+        const current = prev[index] || 0;
+        const prevIndex =
+          current > 0 ? current - 1 : images.length - 1;
+        return { ...prev, [index]: prevIndex };
+      });
+    }
+  }}
+/>
                     </Link>
 
                     {/* Image Dots */}
@@ -167,10 +194,10 @@ const handleDelete = async (id) => {
                                 [index]: i,
                               }))
                             }
-                            className={`h-2.5 rounded-full transition-all duration-300 ${
+                            className={`h-2 rounded-full transition-all duration-300 ${
                               (activeImages[index] || 0) === i
-                                ? "bg-primary w-4"
-                                : "bg-gray-300 w-2.5"
+                                ? "bg-primary w-3"
+                                : "bg-gray-300 w-2"
                             }`}
                           />
                         ))}
