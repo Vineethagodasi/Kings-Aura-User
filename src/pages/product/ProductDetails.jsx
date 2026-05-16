@@ -395,6 +395,7 @@ function ProductDetails() {
             <div className="mt-4">
               <ProtectedButton
                 onClick={handleBuyNow}
+                buyNow="true"
                 disabled={product.availability === "Out of Stock"}
               >
                 <div className="bg-primary text-white py-3 px-8 rounded-lg font-medium hover:bg-primary/90 transition-all shadow-md flex items-center justify-center gap-2">

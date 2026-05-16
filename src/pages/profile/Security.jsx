@@ -2,6 +2,7 @@ import { Camera } from "lucide-react";
 import React, { useState } from "react";
 import { showError, showSuccess } from "../../utils/toast";
 import { changePassword } from "../../constants/auth";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Security() {
   const [passwordData, setPasswordData] = useState({
@@ -9,6 +10,19 @@ export default function Security() {
     newpassword: "",
     confirmPassword: "",
   });
+
+  const [showPassword, setShowPassword] = useState({
+  old: false,
+  new: false,
+  confirm: false,
+});
+
+const toggleVisibility = (field) => {
+  setShowPassword((prev) => ({
+    ...prev,
+    [field]: !prev[field],
+  }));
+};
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -73,30 +87,54 @@ const handleSubmit = async (e) => {
             </h2>
 
             <div className="space-y-3 md:space-y-5">
-              <input
-                name="oldpassword"
-                type="password"
-                placeholder="Current Password"
-                className={inputStyles}
-                value={passwordData.oldpassword}
-                onChange={handleChange}
-              />
-              <input
-                name="newpassword"
-                type="password"
-                placeholder="New Password"
-                className={inputStyles}
-                value={passwordData.newpassword}
-                onChange={handleChange}
-              />
-              <input
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-                className={inputStyles}
-                value={passwordData.confirmPassword}
-                onChange={handleChange}
-              />
+          <div className="relative">
+  <input
+    name="oldpassword"
+    type={showPassword.old ? "text" : "password"}
+    placeholder="Current Password"
+    className={inputStyles}
+    value={passwordData.oldpassword}
+    onChange={handleChange}
+  />
+  <span
+    onClick={() => toggleVisibility("old")}
+    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+  >
+    {showPassword.old ? <EyeOff size={18} /> : <Eye size={18} />}
+  </span>
+</div>
+  <div className="relative">
+  <input
+    name="newpassword"
+    type={showPassword.new ? "text" : "password"}
+    placeholder="New Password"
+    className={inputStyles}
+    value={passwordData.newpassword}
+    onChange={handleChange}
+  />
+  <span
+    onClick={() => toggleVisibility("new")}
+    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+  >
+    {showPassword.new ? <EyeOff size={18} /> : <Eye size={18} />}
+  </span>
+</div>
+     <div className="relative">
+  <input
+    name="confirmPassword"
+    type={showPassword.confirm ? "text" : "password"}
+    placeholder="Confirm Password"
+    className={inputStyles}
+    value={passwordData.confirmPassword}
+    onChange={handleChange}
+  />
+  <span
+    onClick={() => toggleVisibility("confirm")}
+    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+  >
+    {showPassword.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
+  </span>
+</div>
             </div>
           </div>
           {/* Save Button */}

@@ -147,7 +147,7 @@ export default function Orderdetails() {
               <h2 className="font-cinzel text-lg mb-3 flex justify-between items-center">
                 Delivery Address
                 {order.shipping_address?.placeType && (
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded capitalize font-sans">{order.shipping_address.placeType}</span>
+                    <span className="text-xs bg-gray-100 text-black px-2 py-1 rounded capitalize bg-primary font-sans">{order.shipping_address.placeType}</span>
                 )}
               </h2>
               <div className="text-sm text-gray-600 space-y-1">
@@ -157,7 +157,7 @@ export default function Orderdetails() {
                 
                 <div className="mt-3 pt-3 border-t">
                   <p>Phone: {order.shipping_address?.contactinfo?.mobilenumber}</p>
-                  <p>Email: {order.shipping_address?.contactinfo?.emailAddress}</p>
+                  <p className="">Email: {order.shipping_address?.contactinfo?.emailAddress}</p>
                 </div>
               </div>
            </div>
@@ -168,11 +168,11 @@ export default function Orderdetails() {
               <div className="text-sm text-gray-600 space-y-2">
                 <div className="flex justify-between">
                   <span className="font-medium">Method</span>
-                  <span className="uppercase">{order.paymentid?.payment_mode}</span>
+                  <span className="uppercase text-primary">{order.paymentid?.payment_mode}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">Status</span>
-                  <span className="capitalize">{order.paymentid?.payment_status}</span>
+                  <span className="capitalize text-primary">{order.paymentid?.payment_status}</span>
                 </div>
                 <div className="flex justify-between mt-2 pt-2 border-t">
                   <span className="font-medium">Invoice No.</span>

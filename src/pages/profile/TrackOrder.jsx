@@ -125,7 +125,7 @@ const currentStep = getCurrentStep();
               </div>
             </div>
 
-            <p className="font-semibold">₹{item.productprice}</p>
+            <p className="font-semibold text-primary">₹{item.productprice}</p>
           </div>
         ))}
       </div>
@@ -149,7 +149,7 @@ const currentStep = getCurrentStep();
           <div className="text-sm text-gray-600 space-y-2">
             <div className="flex justify-between">
               <span>Total</span>
-              <span>₹{order.orderamount}</span>
+              <p className="text-primary text-lg font-bold">₹{order.orderamount}</p>
             </div>
           </div>
         </div>

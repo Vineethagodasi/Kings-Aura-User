@@ -3,7 +3,7 @@
 import { useNavigate } from "react-router-dom";
 import { showError } from "../utils/toast";
 
-function ProtectedButton({ onClick, children, classNames, addCartCss, disabled }) {
+function ProtectedButton({ onClick, children, classNames, addCartCss, buyNow, disabled }) {
   const navigate = useNavigate();
 
   const buttonCss = `mt-5 w-full border border-primaryDark text-md rounded-lg py-3 
@@ -16,9 +16,17 @@ function ProtectedButton({ onClick, children, classNames, addCartCss, disabled }
     const token = localStorage.getItem("token");
 
     if (!token) {
-      showError(
-        `${addCartCss ? "Please login to add items to cart" : "Please login to add items to wishlist"}`,
-      );
+       let message = "";
+
+    if (buyNow) {
+      message = "Please login to buy this product";
+    } else if (addCartCss) {
+      message = "Please login to add items to cart";
+    } else {
+      message = "Please login to add items to wishlist";
+    }
+
+    showError(message);
       navigate("/login");
       return;
     }
